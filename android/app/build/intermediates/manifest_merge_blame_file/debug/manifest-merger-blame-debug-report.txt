@@ -1,0 +1,166 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.devclient.kiaonline"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="33" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:5:5-77
+11-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:5:22-75
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:4:5-67
+12-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:4:22-64
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->[com.facebook.flipper:flipper:0.125.0] C:\Users\62857\.gradle\caches\transforms-3\970d6c720c7edc11dfb98315b5d4b353\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:5-76
+13-->[com.facebook.flipper:flipper:0.125.0] C:\Users\62857\.gradle\caches\transforms-3\970d6c720c7edc11dfb98315b5d4b353\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:22-73
+14
+15    <application
+15-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:6:5-25:19
+16        android:name="com.devclient.kiaonline.MainApplication"
+16-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:7:7-38
+17        android:allowBackup="false"
+17-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:11:7-34
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.5.0] C:\Users\62857\.gradle\caches\transforms-3\79cced8c9b2ac37f780fb93552ddb595\transformed\core-1.5.0\AndroidManifest.xml:24:18-86
+19        android:debuggable="true"
+20        android:icon="@mipmap/ic_launcher"
+20-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:9:7-41
+21        android:label="@string/app_name"
+21-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:8:7-39
+22        android:roundIcon="@mipmap/ic_launcher_round"
+22-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:10:7-52
+23        android:theme="@style/AppTheme"
+23-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:12:7-38
+24        android:usesCleartextTraffic="true" >
+24-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:8:9-44
+25        <activity
+25-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:11:9-111
+26            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+26-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:11:19-83
+27            android:exported="false" />
+27-->D:\Dev\CLIENT\KIAOnline\android\app\src\debug\AndroidManifest.xml:11:84-108
+28        <activity
+28-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:13:7-24:18
+29            android:name="com.devclient.kiaonline.MainActivity"
+29-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:14:9-37
+30            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+30-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:16:9-118
+31            android:exported="true"
+31-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:19:9-32
+32            android:label="@string/app_name"
+32-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:15:9-41
+33            android:launchMode="singleTask"
+33-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:17:9-40
+34            android:windowSoftInputMode="adjustResize" >
+34-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:18:9-51
+35            <intent-filter>
+35-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:20:9-23:25
+36                <action android:name="android.intent.action.MAIN" />
+36-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:21:13-65
+36-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:21:21-62
+37
+38                <category android:name="android.intent.category.LAUNCHER" />
+38-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:22:13-73
+38-->D:\Dev\CLIENT\KIAOnline\android\app\src\main\AndroidManifest.xml:22:23-70
+39            </intent-filter>
+40        </activity>
+41
+42        <meta-data
+42-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:9-13:36
+43            android:name="app_data_collection_default_enabled"
+43-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-63
+44            android:value="true" />
+44-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-33
+45
+46        <service
+46-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-23:19
+47            android:name="com.google.firebase.components.ComponentDiscoveryService"
+47-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-84
+48            android:directBootAware="true"
+48-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-43
+49            android:exported="false" >
+49-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-37
+50            <meta-data
+50-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-22:85
+51                android:name="com.google.firebase.components:io.invertase.firebase.app.ReactNativeFirebaseAppRegistrar"
+51-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:21:17-120
+52                android:value="com.google.firebase.components.ComponentRegistrar" />
+52-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:22:17-82
+53            <meta-data
+53-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:35:13-37:85
+54                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+54-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:36:17-109
+55                android:value="com.google.firebase.components.ComponentRegistrar" />
+55-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:37:17-82
+56        </service>
+57
+58        <provider
+58-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:9-29:38
+59            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
+59-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:13-88
+60            android:authorities="com.devclient.kiaonline.reactnativefirebaseappinitprovider"
+60-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-86
+61            android:exported="false"
+61-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:13-37
+62            android:initOrder="99" />
+62-->[:react-native-firebase_app] D:\Dev\CLIENT\KIAOnline\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-35
+63        <provider
+63-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:23:9-28:39
+64            android:name="com.google.firebase.provider.FirebaseInitProvider"
+64-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:24:13-77
+65            android:authorities="com.devclient.kiaonline.firebaseinitprovider"
+65-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:25:13-72
+66            android:directBootAware="true"
+66-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:26:13-43
+67            android:exported="false"
+67-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:27:13-37
+68            android:initOrder="100" />
+68-->[com.google.firebase:firebase-common:20.4.2] C:\Users\62857\.gradle\caches\transforms-3\24d1f46348951bea647db882c5c01898\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:28:13-36
+69
+70        <activity
+70-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:23:9-27:75
+71            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+71-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:24:13-93
+72            android:excludeFromRecents="true"
+72-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:25:13-46
+73            android:exported="false"
+73-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:26:13-37
+74            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+74-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:27:13-72
+75        <!--
+76            Service handling Google Sign-In user revocation. For apps that do not integrate with
+77            Google Sign-In, this service will never be started.
+78        -->
+79        <service
+79-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:33:9-37:51
+80            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+80-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:34:13-89
+81            android:exported="true"
+81-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:35:13-36
+82            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+82-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:36:13-107
+83            android:visibleToInstantApps="true" />
+83-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\62857\.gradle\caches\transforms-3\06279635c2213ae353e4a95dacf6b7c5\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:37:13-48
+84
+85        <activity
+85-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\62857\.gradle\caches\transforms-3\f477fb5ef6570670df25ffb1a486945f\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+86            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+86-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\62857\.gradle\caches\transforms-3\f477fb5ef6570670df25ffb1a486945f\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+87            android:exported="false"
+87-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\62857\.gradle\caches\transforms-3\f477fb5ef6570670df25ffb1a486945f\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+88            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+88-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\62857\.gradle\caches\transforms-3\f477fb5ef6570670df25ffb1a486945f\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+89
+90        <meta-data
+90-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\62857\.gradle\caches\transforms-3\561300eeb9b81bb767313fdd9baa85be\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:21:9-23:69
+91            android:name="com.google.android.gms.version"
+91-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\62857\.gradle\caches\transforms-3\561300eeb9b81bb767313fdd9baa85be\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:22:13-58
+92            android:value="@integer/google_play_services_version" />
+92-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\62857\.gradle\caches\transforms-3\561300eeb9b81bb767313fdd9baa85be\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:23:13-66
+93    </application>
+94
+95</manifest>
