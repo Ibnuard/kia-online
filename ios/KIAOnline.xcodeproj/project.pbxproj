@@ -572,7 +572,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "KIAOnline/Info.plist";
-             INFOPLIST_KEY_CFBundleDisplayName = "KIA Online";
+				INFOPLIST_KEY_CFBundleDisplayName = "KIA Online";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -598,7 +598,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = "KIAOnline/Info.plist";
-             INFOPLIST_KEY_CFBundleDisplayName = "KIA Online";
+				INFOPLIST_KEY_CFBundleDisplayName = "KIA Online";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

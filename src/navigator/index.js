@@ -32,7 +32,10 @@ export const SplashStack = () => {
 //auth stack screen
 export const AuthStackScreen = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen name="SignIn" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={LoginScreen} />
     </Stack.Navigator>

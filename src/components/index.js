@@ -1,5 +1,6 @@
-import Button from './button';
 import Card from './card';
 import Modal from './modal';
+import CustomButton from './Button';
+import Gap from './Gap';
 
-export {Button, Card, Modal};
+export {CustomButton, Card, Modal, Gap};
