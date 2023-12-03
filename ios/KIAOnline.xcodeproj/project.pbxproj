@@ -31,6 +31,7 @@
 		82C33C7E28FE683D00F15D41 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82C33C6E28FE683D00F15D41 /* EvilIcons.ttf */; };
 		82C33C7F28FE683D00F15D41 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82C33C6F28FE683D00F15D41 /* SimpleLineIcons.ttf */; };
 		82C33C8028FE683D00F15D41 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82C33C7028FE683D00F15D41 /* MaterialIcons.ttf */; };
+		20C73819A35449BB81B71FEB /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01169512F4C8464987DE4363 /* Manrope-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-KIAOnline-KIAOnlineTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KIAOnline-KIAOnlineTests.release.xcconfig"; path = "Target Support Files/Pods-KIAOnline-KIAOnlineTests/Pods-KIAOnline-KIAOnlineTests.release.xcconfig"; sourceTree = "<group>"; };
 		DB49B0E75AC2477E94855CEC /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		01169512F4C8464987DE4363 /* Manrope-Regular.ttf */ = {isa = PBXFileReference; name = "Manrope-Regular.ttf"; path = "../assets/fonts/Manrope-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				DB49B0E75AC2477E94855CEC /* Poppins-Regular.ttf */,
+				01169512F4C8464987DE4363 /* Manrope-Regular.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -330,6 +333,7 @@
 				82C33C7628FE683D00F15D41 /* MaterialCommunityIcons.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				00F1146DB9674D6595D3A348 /* Poppins-Regular.ttf in Resources */,
+				20C73819A35449BB81B71FEB /* Manrope-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

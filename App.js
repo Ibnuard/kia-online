@@ -8,7 +8,7 @@ import {
 import {Colors} from './src/styles';
 
 const fontConfig = {
-  fontFamily: 'Poppins-Regular',
+  fontFamily: 'Manrope-Regular',
 };
 
 // Default theme
