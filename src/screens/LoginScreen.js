@@ -7,14 +7,17 @@ import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../context';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
 
+  const {signIn} = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <StatusBar
-        backgroundColor={Colors.COLOR_WHITE}
+        backgroundColor={Colors.COLOR_BACKGROUND}
         barStyle={'dark-content'}
       />
       <View style={styles.topContainer}>
@@ -33,11 +36,7 @@ const LoginScreen = () => {
           <Icon name={'arrowright'} size={18} color={Colors.COLOR_PRIMARY} />
         </View>
         <View style={styles.bgContainer}>
-          <Image
-            source={ASSETS.hero}
-            style={styles.heroImg}
-            resizeMode={'contain'}
-          />
+          <Image source={ASSETS.hero} style={styles.heroImg} />
         </View>
       </View>
       <View style={styles.inputContainer}>
@@ -58,7 +57,7 @@ const LoginScreen = () => {
           placeholderTextColor={Colors.COLOR_GREY}
         />
         <Gap height={20} />
-        <CustomButton>Masuk</CustomButton>
+        <CustomButton onPress={() => signIn()}>Masuk</CustomButton>
         <Gap height={28} />
         <View style={styles.bottomContainer}>
           <Text variant={'bodyMedium'}>Belum pernah mendaftar?</Text>
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
 
   topContainer: {
     flex: 1,
-    backgroundColor: Colors.COLOR_WHITE,
+    backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
   inputContainer: {
@@ -93,10 +92,13 @@ const styles = StyleSheet.create({
     padding: Size.SIZE_24,
   },
 
+  bgContainer: {},
+
   heroImg: {
     alignSelf: 'center',
-    height: Scaler.scaleSize(400),
+    height: '100%',
     width: Scaler.scaleSize(220),
+    marginTop: 10,
   },
 
   topLogo: {
@@ -137,6 +139,8 @@ const styles = StyleSheet.create({
   labelTitle: {
     fontSize: FONT_SIZE_16,
     marginBottom: Scaler.scaleSize(8),
+    color: Colors.COLOR_BLACK,
+    fontWeight: 'bold',
   },
 
   textLoginAdmin: {
@@ -145,7 +149,8 @@ const styles = StyleSheet.create({
   },
 
   textLink: {
-    color: Colors.COLOR_PRIMARY,
+    color: Colors.COLOR_BLACK,
+    fontWeight: 'bold',
     marginHorizontal: 4,
     paddingHorizontal: 2,
   },

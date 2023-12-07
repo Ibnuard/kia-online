@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {AuthStackScreen, MainScreen, SplashStack} from './navigator';
+import {SplashStack} from './navigator';
 import {AuthContext} from './context';
 import {retrieveData} from './utils/store';
-import SplashScreen from './screens/splash';
+import {AuthStackScreen} from './navigator/AuthNavigator';
+import {MainScreen} from './navigator/MainNavigator';
 
 const App = () => {
   //handle auth flow

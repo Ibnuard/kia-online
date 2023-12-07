@@ -3,9 +3,14 @@ import {Button} from 'react-native-paper';
 import React from 'react';
 import {Scaler} from '../styles';
 
-const CustomButton = ({children, style}) => {
+const CustomButton = props => {
+  const {children, style, mode} = props;
   return (
-    <Button mode={'contained'} compact style={[styles.container, style]}>
+    <Button
+      {...props}
+      mode={mode || 'contained'}
+      compact
+      style={[styles.container, style]}>
       {children}
     </Button>
   );

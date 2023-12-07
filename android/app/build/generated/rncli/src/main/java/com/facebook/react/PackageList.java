@@ -15,8 +15,14 @@ import java.util.ArrayList;
 import com.oblador.vectoricons.VectorIconsPackage;
 // @react-native-firebase/app
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+// react-native-date-picker
+import com.henninghall.date_picker.DatePickerPackage;
 // react-native-encrypted-storage
 import com.emeraldsanto.encryptedstorage.RNEncryptedStoragePackage;
+// react-native-fast-image
+import com.dylanvann.fastimage.FastImageViewPackage;
+// react-native-pager-view
+import com.reactnativepagerview.PagerViewPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -68,7 +74,10 @@ public class PackageList {
       new MainReactPackage(mConfig),
       new VectorIconsPackage(),
       new ReactNativeFirebaseAppPackage(),
+      new DatePickerPackage(),
       new RNEncryptedStoragePackage(),
+      new FastImageViewPackage(),
+      new PagerViewPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage()
     ));

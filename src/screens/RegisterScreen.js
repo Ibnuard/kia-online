@@ -13,7 +13,7 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar
-        backgroundColor={Colors.COLOR_WHITE}
+        backgroundColor={Colors.COLOR_BACKGROUND}
         barStyle={'dark-content'}
       />
       <View style={styles.topContainer}>
@@ -52,7 +52,9 @@ const RegisterScreen = () => {
           placeholderTextColor={Colors.COLOR_GREY}
         />
         <Gap height={20} />
-        <CustomButton>Daftar</CustomButton>
+        <CustomButton onPress={() => navigation.navigate('SignUpProfile')}>
+          Daftar
+        </CustomButton>
         <Gap height={28} />
         <View style={styles.bottomContainer}>
           <Text variant={'bodyMedium'}>Sudah punya akun?</Text>
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
 
   topContainer: {
     flex: 1,
-    backgroundColor: Colors.COLOR_WHITE,
+    backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
   inputContainer: {
@@ -131,6 +133,8 @@ const styles = StyleSheet.create({
   labelTitle: {
     fontSize: FONT_SIZE_16,
     marginBottom: Scaler.scaleSize(8),
+    color: Colors.COLOR_BLACK,
+    fontWeight: 'bold',
   },
 
   textLoginAdmin: {
@@ -139,7 +143,8 @@ const styles = StyleSheet.create({
   },
 
   textLink: {
-    color: Colors.COLOR_PRIMARY,
+    color: Colors.COLOR_BLACK,
+    fontWeight: 'bold',
     marginHorizontal: 4,
     paddingHorizontal: 2,
   },

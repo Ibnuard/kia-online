@@ -1,9 +1,5 @@
-import * as React from 'react';
-import {View, Text} from 'react-native';
-import styles from './styles';
+import BeritaCard from './BeritaCard';
+import ImunisasiCard from './ImunisasiCard';
+import ChildCard from './ChildCard';
 
-const Card = ({children, style}) => {
-  return <View style={[style, styles.container]}>{children}</View>;
-};
-
-export default Card;
+export {BeritaCard, ImunisasiCard, ChildCard};
