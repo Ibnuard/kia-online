@@ -7,22 +7,34 @@ import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
 import {useNavigation} from '@react-navigation/native';
 import {addToDB, isDBPathExist} from '../utils/Database';
+import ModalView from '../components/modal';
+import {ModalContext} from '../context';
 
 const RegisterScreen = () => {
   const [phone, setPhone] = React.useState();
+
+  // Modal
+  const {showModal, hideModal, changeModal, modalState} =
+    React.useContext(ModalContext);
 
   // Nav
   const navigation = useNavigation();
 
   // FUNCTIONAL
   const onRegisterPressed = async () => {
+    await showModal({type: 'loading'});
     const isUserExist = await isDBPathExist(`Users/${phone}`);
 
     if (!isUserExist) {
+      await hideModal();
       navigation.navigate('SignUpProfile', {
         phone: phone,
       });
     } else {
+      await showModal({
+        type: 'popup',
+        message: 'User sudah terdaftar, silahkan login!',
+      });
       console.log('User exist');
     }
   };
@@ -87,6 +99,12 @@ const RegisterScreen = () => {
           </Text>
         </View>
       </View>
+      <ModalView
+        type={modalState.type}
+        visible={modalState.visible}
+        message={modalState.message}
+        onPress={() => hideModal()}
+      />
     </View>
   );
 };

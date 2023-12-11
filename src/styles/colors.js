@@ -18,3 +18,4 @@ export const CHIP_GRAY = '#F4F6F7';
 
 //OTHER
 export const COLOR_TRANSPARENT = 'transparent';
+export const COLOR_RED_20 = '#FCE9E9';

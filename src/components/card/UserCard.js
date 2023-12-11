@@ -21,9 +21,7 @@ const UserCard = props => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => console.log('Edit pressed')}>
+        <TouchableOpacity activeOpacity={0.8} onPress={props?.onEditPress}>
           <Icon name="circle-edit-outline" size={24} />
         </TouchableOpacity>
       </Card.Content>

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {Scaler} from '../../../../styles';
+import {Colors, Scaler} from '../../../../styles';
 
 const styles = StyleSheet.create({
   modal: {
@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
     height: Scaler.scaleSize(62),
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.COLOR_WHITE,
+    borderRadius: 12,
   },
 });
 

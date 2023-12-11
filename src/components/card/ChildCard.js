@@ -5,21 +5,40 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors, Scaler, Size} from '../../styles';
 import Gap from '../Gap';
 import CustomButton from '../Button';
+import moment from 'moment';
 
-const ChildCard = ({onButtonPress}) => {
+const ChildCard = ({
+  onButtonPress,
+  isFromEdit,
+  onPosPress,
+  onNegPress,
+  data,
+}) => {
+  const {name, gender, date, id, createdDate} = data;
+
+  console.log(moment(date).format('DD MMMM YYYY'));
+
   return (
-    <Card style={{backgroundColor: Colors.COLOR_WHITE}}>
+    <Card
+      style={{
+        backgroundColor: Colors.COLOR_WHITE,
+        marginVertical: Size.SIZE_8,
+      }}>
       <Card.Content>
         <View style={styles.topRow}>
           <View style={styles.circle}>
-            <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
+            <Icon
+              size={24}
+              name="emoticon-happy-outline"
+              color={Colors.COLOR_PRIMARY}
+            />
           </View>
           <View>
             <Text style={styles.textTitle} variant={'titleMedium'}>
-              Imuniassi Polio
+              {name}
             </Text>
             <Text style={styles.textLabel} variant={'labelSmall'}>
-              Desc
+              Dibuat: {moment(createdDate).format('DD MMMM YYYY')}
             </Text>
           </View>
         </View>
@@ -27,21 +46,37 @@ const ChildCard = ({onButtonPress}) => {
         <Divider />
         <Gap height={14} />
         <View style={styles.bottomRow}>
-          <View style={styles.bottomLeft}>
-            <Text variant={'labelSmall'}>Jenis Kelamin</Text>
-            <Text style={styles.textTitle} variant={'titleMedium'}>
-              Value
-            </Text>
-          </View>
           <View style={styles.bottomRight}>
             <Text variant={'labelSmall'}>Tanggal Lahir</Text>
-            <Text style={styles.textTitle} variant={'titleMedium'}>
-              Value
+            <Text style={styles.textSubtitle} variant={'titleMedium'}>
+              {moment(date).format('DD MMM YYYY')}
+            </Text>
+          </View>
+          <View style={styles.bottomLeft}>
+            <Text variant={'labelSmall'}>Jenis Kelamin</Text>
+            <Text style={styles.textSubtitle} variant={'titleMedium'}>
+              {gender == 'male' ? 'Laki - laki' : 'Perempuan'}
             </Text>
           </View>
         </View>
         <Gap height={14} />
-        <CustomButton onPress={onButtonPress}>Pilih biodata</CustomButton>
+        {isFromEdit ? (
+          <View style={styles.rowButton}>
+            <CustomButton
+              style={styles.posButton}
+              onPress={() => (onPosPress ? onPosPress(id) : null)}>
+              Ubah
+            </CustomButton>
+            <CustomButton
+              style={styles.negButton}
+              labelStyle={styles.textNeg}
+              onPress={() => (onNegPress ? onNegPress(id) : null)}>
+              Hapus
+            </CustomButton>
+          </View>
+        ) : (
+          <CustomButton onPress={onButtonPress}>Pilih biodata</CustomButton>
+        )}
       </Card.Content>
     </Card>
   );
@@ -90,10 +125,26 @@ const styles = StyleSheet.create({
 
   bottomLeft: {
     flex: 1,
+    alignItems: 'flex-end',
   },
 
   bottomRight: {
     flex: 1,
+  },
+
+  posButton: {
+    flex: 1,
+    marginHorizontal: 4,
+  },
+
+  negButton: {
+    flex: 1,
+    marginHorizontal: 4,
+    backgroundColor: Colors.COLOR_RED_20,
+  },
+
+  rowButton: {
+    flexDirection: 'row',
   },
 
   // text
@@ -102,7 +153,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  textSubtitle: {
+    fontWeight: 'bold',
+    marginTop: 4,
+  },
+
   textLabel: {
     color: Colors.COLOR_GREY,
+  },
+
+  textNeg: {
+    color: Colors.COLOR_RED,
   },
 });

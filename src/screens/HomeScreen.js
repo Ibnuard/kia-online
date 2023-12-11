@@ -50,7 +50,7 @@ const HomeScreen = () => {
       showsVerticalScrollIndicator={false}>
       <View style={styles.topContent}>
         <Text style={styles.textHi} variant={'bodyMedium'}>
-          Halo, {user.name}
+          Halo, {user?.name}
         </Text>
       </View>
 

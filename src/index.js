@@ -7,6 +7,7 @@ import {AuthStackScreen} from './navigator/AuthNavigator';
 import {MainScreen} from './navigator/MainNavigator';
 import {StatusBar} from 'react-native';
 import {Colors} from './styles';
+import {ModalProvider} from './context/ModalProvider';
 
 const App = () => {
   //handle auth flow
@@ -103,15 +104,17 @@ const App = () => {
         backgroundColor={Colors.COLOR_BACKGROUND}
         barStyle={'dark-content'}
       />
-      <AuthContext.Provider value={authContext}>
-        {state.isLoading ? (
-          <SplashStack />
-        ) : state.userToken == null ? (
-          <AuthStackScreen />
-        ) : (
-          <MainScreen />
-        )}
-      </AuthContext.Provider>
+      <ModalProvider>
+        <AuthContext.Provider value={authContext}>
+          {state.isLoading ? (
+            <SplashStack />
+          ) : state.userToken == null ? (
+            <AuthStackScreen />
+          ) : (
+            <MainScreen />
+          )}
+        </AuthContext.Provider>
+      </ModalProvider>
     </NavigationContainer>
   );
 };

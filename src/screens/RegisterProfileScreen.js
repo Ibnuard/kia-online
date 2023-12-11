@@ -14,23 +14,36 @@ import {FONT_SIZE_16} from '../styles/typography';
 import {CustomButton, Gap} from '../components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Keyboard} from 'react-native';
-import {AuthContext} from '../context';
-import {addToDB} from '../utils/Database';
+import {AuthContext, ModalContext} from '../context';
+import {addToDB, updateDB} from '../utils/Database';
+import ModalView from '../components/modal';
 
 const RegisterProfileScreen = () => {
   // initial stat
-  const {signIn} = React.useContext(AuthContext);
+  const {user, signIn} = React.useContext(AuthContext);
 
+  // Nav
   const navigation = useNavigation();
   const route = useRoute();
 
   const PHONE = route?.params?.phone;
+  const ROUTE_NAME = route?.name;
+
+  const IS_EDIT = ROUTE_NAME == 'EditProfile';
+
+  // Modal
+  // Modal
+  const {showModal, hideModal, changeModal, modalState} =
+    React.useContext(ModalContext);
 
   // state
-  const [name, setName] = React.useState();
-  const [email, setEmail] = React.useState();
-  const [phone, setPhone] = React.useState(PHONE);
-  const [alamat, setAlamat] = React.useState();
+  const [name, setName] = React.useState(IS_EDIT ? user?.name : '');
+  const [email, setEmail] = React.useState(IS_EDIT ? user?.email : '');
+  const [phone, setPhone] = React.useState(IS_EDIT ? user?.phone : PHONE);
+  const [alamat, setAlamat] = React.useState(IS_EDIT ? user?.alamat : '');
+
+  // modal ok type
+  const [modalOkType, setModalOkType] = React.useState('positive');
 
   const [errorInput, setErrorInput] = React.useState({
     name: null,
@@ -57,6 +70,7 @@ const RegisterProfileScreen = () => {
     if (!email.match(/[^\s@]+@[^\s@]+\.[^\s@]+/gi)) {
       console.log('EMAIL ERROR');
       setErrorInput({...errorInput, email: 'Email tidak valid.'});
+
       return;
     }
 
@@ -69,18 +83,55 @@ const RegisterProfileScreen = () => {
       return;
     }
 
+    await showModal({type: 'loading'});
+
+    // IS EDIT ROUTE
+    if (IS_EDIT) {
+      try {
+        updateDB(`Users/${phone}`, {
+          name: name,
+          alamat: alamat,
+          email: email,
+        }).then(async () => {
+          setModalOkType('positive');
+          await changeModal({
+            type: 'popup',
+            message: 'Data berhasil diubah!',
+          });
+        });
+        return;
+      } catch (error) {
+        setModalOkType('negative');
+        await changeModal({
+          type: 'popup',
+          message: 'Ada sesuatu yang tidak beres, silahkan coba lagi nanti!',
+        });
+        return;
+      }
+    }
+
     try {
       const data = {
         name: name,
         email: email,
         phone: phone,
-        alamat: alamat,
+        alamat: al,
+        role: 'user',
       };
 
-      await addToDB(`Users/${phone}`, data).then(() => {
-        signIn();
+      await addToDB(`Users/${phone}`, data).then(async () => {
+        setModalOkType('positive');
+        await changeModal({
+          type: 'popup',
+          message: 'Pendaftaran berhasil, silahkan login!',
+        });
       });
     } catch (error) {
+      setModalOkType('negative');
+      await changeModal({
+        type: 'popup',
+        message: 'Ada sesuatu yang tidak beres, silahkan coba lagi nanti!',
+      });
       console.log(error);
     }
   };
@@ -96,7 +147,10 @@ const RegisterProfileScreen = () => {
           backgroundColor={Colors.COLOR_WHITE}
           barStyle={'dark-content'}
         />
-        <AppBar title="Lengkapi Profile" />
+        <AppBar
+          showBack={IS_EDIT}
+          title={IS_EDIT ? 'Ubah Profile' : 'Lengkapi Profile'}
+        />
         <View style={styles.mainContainer}>
           <Text variant={'labelLarge'} style={styles.labelTitle}>
             Nama Lengkap
@@ -166,9 +220,28 @@ const RegisterProfileScreen = () => {
           <CustomButton
             disabled={!name || !email || !alamat}
             onPress={() => onRegister()}>
-            Daftar
+            {IS_EDIT ? 'Simpan' : 'Daftar'}
           </CustomButton>
         </View>
+        <ModalView
+          type={modalState.type}
+          visible={modalState.visible}
+          message={modalState.message}
+          onPress={() => hideModal()}
+          onModalHide={() =>
+            modalOkType == 'positive'
+              ? IS_EDIT
+                ? (signIn({
+                    name: name,
+                    email: email,
+                    alamat: alamat,
+                    phone: phone,
+                  }),
+                  navigation.goBack())
+                : navigation.navigate('SignIn')
+              : null
+          }
+        />
       </ScrollView>
     </TouchableWithoutFeedback>
   );

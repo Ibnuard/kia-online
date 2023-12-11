@@ -43,6 +43,7 @@ export const MainScreen = () => {
             routeName === 'HomeInit' ||
             routeName === 'KategoriNav' ||
             routeName === 'HistoryInit' ||
+            routeName === 'ProfileInit' ||
             !routeName
           ) {
             return {display: 'flex'};

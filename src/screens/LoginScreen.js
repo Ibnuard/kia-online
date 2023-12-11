@@ -1,14 +1,15 @@
 import {Image, StatusBar, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {Button, Text, TextInput} from 'react-native-paper';
+import {Text, TextInput} from 'react-native-paper';
 import {ASSETS} from '../utils/assetsLoader';
 import {Colors, Scaler, Size} from '../styles';
 import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from '../context';
+import {AuthContext, ModalContext} from '../context';
 import {getDBdata, isDBPathExist} from '../utils/Database';
+import ModalView from '../components/modal';
 
 const LoginScreen = () => {
   const [phone, setPhone] = React.useState();
@@ -16,11 +17,15 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const {signIn} = React.useContext(AuthContext);
+  const {showModal, changeModal, hideModal, modalState} =
+    React.useContext(ModalContext);
 
   const onLogin = async () => {
+    showModal({type: 'loading'});
     const isUserExist = await isDBPathExist(`Users/${phone}`);
 
     if (isUserExist) {
+      hideModal();
       try {
         const user = (await getDBdata(`Users/${phone}`)).data();
         if (user) {
@@ -31,9 +36,12 @@ const LoginScreen = () => {
         console.log(error);
       }
     } else {
+      changeModal({type: 'popup', message: 'User tidak ditemukan!'});
       console.log('Users not found');
     }
   };
+
+  console.log(modalState);
 
   return (
     <View style={styles.container}>
@@ -94,6 +102,12 @@ const LoginScreen = () => {
           </Text>
         </View>
       </View>
+      <ModalView
+        visible={modalState.visible}
+        type={modalState.type}
+        message={modalState.message}
+        onPress={() => hideModal()}
+      />
     </View>
   );
 };

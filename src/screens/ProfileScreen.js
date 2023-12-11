@@ -6,15 +6,19 @@ import {Divider, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Card} from '../components';
 import {AuthContext} from '../context';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const {signOut, user} = React.useContext(AuthContext);
+
+  // Nav
+  const navigation = useNavigation();
 
   const MENUS = [
     {
       icon: 'emoticon-happy-outline',
       title: 'Biodata Anak',
-      to: null,
+      to: () => navigation.navigate('ChildList'),
     },
     {
       icon: 'information-outline',
@@ -37,7 +41,11 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <AppBar style={styles.appBar} title="Profile" />
       <View style={styles.mainContainer}>
-        <Card.UserCard user={user} style={styles.userCard} />
+        <Card.UserCard
+          user={user}
+          style={styles.userCard}
+          onEditPress={() => navigation.navigate('EditProfile')}
+        />
         <Text style={styles.textSubtitle} variant={'titleLarge'}>
           Preferensi
         </Text>

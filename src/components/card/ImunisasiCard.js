@@ -12,9 +12,15 @@ const ImunisasiCard = props => {
     <Card style={{backgroundColor: Colors.COLOR_WHITE}} {...props}>
       {!props.small ? (
         <Card.Content>
-          <Chip style={styles.chipDisable} textStyle={styles.chipDisableText}>
-            Kamu belum terdaftar di sesi ini
-          </Chip>
+          {!props.isHistory ? (
+            <Chip style={styles.chipDisable} textStyle={styles.chipDisableText}>
+              {'Kamu belum terdaftar di sesi ini'}
+            </Chip>
+          ) : (
+            <Chip style={styles.chipActive} textStyle={styles.chipActiveText}>
+              Imunisasi telah dilaksanakan
+            </Chip>
+          )}
           <Gap height={14} />
           <View style={styles.topRow}>
             <View style={styles.circle}>
@@ -46,10 +52,14 @@ const ImunisasiCard = props => {
               </Text>
             </View>
           </View>
-          <Gap height={14} />
-          <CustomButton onPress={onRegsiterPress}>
-            Daftar Imunisasi
-          </CustomButton>
+          {!props.isHistory && (
+            <>
+              <Gap height={14} />
+              <CustomButton onPress={onRegsiterPress}>
+                Daftar Imunisasi
+              </CustomButton>
+            </>
+          )}
         </Card.Content>
       ) : (
         <Card.Content>

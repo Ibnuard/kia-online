@@ -21,6 +21,7 @@ const HistoryScreen = () => {
             <View style={styles.dividerTraill} />
           </View>
           <Card.ImunisasiCard
+            isHistory={true}
             style={styles.cardContainer}
             onPress={() => navigation.navigate('HistoryDetail')}
           />

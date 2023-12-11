@@ -20,11 +20,25 @@ export const addToDB = (path, data) => {
   }
 };
 
-export const getDBdata = async path => {
+export const getDBdata = async (path, useChildPath) => {
   try {
+    if (useChildPath) {
+      const data = await firestore().doc(path);
+
+      return data;
+    }
+
     const data = await firestore().doc(path).get();
 
     return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateDB = (path, data) => {
+  try {
+    return firestore().doc(path).update(data);
   } catch (error) {
     throw error;
   }

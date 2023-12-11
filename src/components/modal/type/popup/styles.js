@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: Size.SIZE_12,
     paddingHorizontal: Size.SIZE_18,
+    backgroundColor: Colors.COLOR_WHITE,
+    borderRadius: 8,
   },
 
   buttonOk: {
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
 
   textButton: {
     ...Typo.TextNormalBold,
-    color: Colors.COLOR_ACCENT,
+    color: Colors.COLOR_PRIMARY,
   },
 });
 

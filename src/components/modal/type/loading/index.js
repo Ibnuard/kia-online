@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {Colors} from '../../../../styles';
 import styles from './styles';
 
 const ModalLoading = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator color={Colors.COLOR_ACCENT} />
+      <ActivityIndicator color={Colors.COLOR_PRIMARY} />
     </View>
   );
 };

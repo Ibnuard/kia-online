@@ -4,7 +4,14 @@ import ModalLoading from './type/loading';
 import styles from './styles';
 import ModalPopUp from './type/popup';
 
-const ModalView = ({children, visible = false, type, onPress, onModalHide}) => {
+const ModalView = ({
+  children,
+  visible = false,
+  type,
+  onPress,
+  onModalHide,
+  message,
+}) => {
   //render modal children
   const renderContent = () => {
     switch (type) {
@@ -12,7 +19,7 @@ const ModalView = ({children, visible = false, type, onPress, onModalHide}) => {
         return <ModalLoading />;
         break;
       case 'popup':
-        return <ModalPopUp onButtonPress={onPress} />;
+        return <ModalPopUp message={message} onButtonPress={onPress} />;
         break;
       default:
         return children;
