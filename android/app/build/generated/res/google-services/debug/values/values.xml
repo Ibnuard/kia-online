@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="gcm_defaultSenderId" translatable="false">496859014323</string>
-    <string name="google_api_key" translatable="false">AIzaSyAusBN9cT1gn1qJgk57u4g1Y41qWUW2hOY</string>
-    <string name="google_app_id" translatable="false">1:496859014323:android:be5461b412aa59d9fe3cc6</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAusBN9cT1gn1qJgk57u4g1Y41qWUW2hOY</string>
-    <string name="google_storage_bucket" translatable="false">kia-online-993b5.appspot.com</string>
-    <string name="project_id" translatable="false">kia-online-993b5</string>
-</resources>
