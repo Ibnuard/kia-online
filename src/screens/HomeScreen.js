@@ -2,20 +2,18 @@ import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Colors, Scaler, Size} from '../styles';
 import {ActivityIndicator, Card, Text} from 'react-native-paper';
-import {BeritaCard, CustomButton, Gap} from '../components';
+import {CustomButton, Gap, Card as CustomCard} from '../components';
 import {useFocusEffect} from '@react-navigation/native';
 import {ASSETS} from '../utils/assetsLoader';
+import {AuthContext} from '../context';
 
 const HomeScreen = () => {
   const [news, setNews] = React.useState([]);
 
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //       getNews();
+  // User session
+  const {user} = React.useContext(AuthContext);
 
-  //       return;
-  //     }, []),
-  //   );
+  console.log(user);
 
   React.useEffect(() => {
     getNews();
@@ -52,7 +50,7 @@ const HomeScreen = () => {
       showsVerticalScrollIndicator={false}>
       <View style={styles.topContent}>
         <Text style={styles.textHi} variant={'bodyMedium'}>
-          Halo, Raden Bagus
+          Halo, {user.name}
         </Text>
       </View>
 
@@ -93,7 +91,7 @@ const HomeScreen = () => {
       <View style={styles.newsContainer}>
         {news && news.length ? (
           news.map((item, index) => {
-            return <BeritaCard key={item + index} data={item} />;
+            return <CustomCard.BeritaCard key={item + index} data={item} />;
           })
         ) : (
           <View style={styles.newsLoading}>

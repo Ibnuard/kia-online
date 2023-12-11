@@ -9,7 +9,7 @@ import Gap from '../Gap';
 const ImunisasiCard = props => {
   const {onRegsiterPress} = props;
   return (
-    <Card {...props}>
+    <Card style={{backgroundColor: Colors.COLOR_WHITE}} {...props}>
       {!props.small ? (
         <Card.Content>
           <Chip style={styles.chipDisable} textStyle={styles.chipDisableText}>

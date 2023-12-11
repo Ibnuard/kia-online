@@ -1,12 +1,15 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import AppBar from '../components/AppBar';
-import {Colors, Size} from '../styles';
-import {Card, CustomButton} from '../components';
-import {Divider, Text} from 'react-native-paper';
+import {Colors, Scaler, Size} from '../styles';
+import {Card as CustomCard, CustomButton} from '../components';
+import {Card, Divider, Text} from 'react-native-paper';
+import {BarChart, LineChart} from 'react-native-gifted-charts';
 
 const HistoryDetailScreen = () => {
   const [selectedChart, setSelectedChart] = React.useState('BBTB');
+
+  const screenWidth = Dimensions.get('window').width;
 
   const CHART_BUTTON = [
     {
@@ -23,11 +26,42 @@ const HistoryDetailScreen = () => {
     },
   ];
 
+  const CHART_OPT = {
+    BBTB: [
+      '< - 3 SD#Gizi buruk (Severely Wasted)',
+      '- 3 SD sampai dengan < - 2 SD#Gizi kurang (Wasted)',
+      '-2 SD sampai dengan + 1 SD#Gizi baik (Normal)',
+      '> + 2 SD sampai dengan + 2 SD#Beresiko gizi lebih (Posible risk of overweight)',
+      '> 3 SD#Obesitas',
+    ],
+    BBUM: [
+      '< - 3 SD#Sangat pendek (Severely Stunted)',
+      '- 3 SD sampai dengan < - 2 SD#Pendek (Stunted)',
+      '-2 SD sampai dengan + 1 SD#Normal',
+      '> + 2 SD sampai dengan + 2 SD#Tinggi',
+    ],
+    TBUM: [
+      '< - 3 SD#Sangat pendek (Severely Underweight)',
+      '- 3 SD sampai dengan < - 2 SD#Berat badan kurang (Underweight)',
+      '-2 SD sampai dengan + 1 SD#Berat badan normal',
+      '> + 1 SD#Resiko berat badan lebih',
+    ],
+  };
+
+  // LINE CHART DATA
+  const data_chart = [
+    {value: 8, label: 20},
+    {value: 10, label: 18},
+  ];
+
   return (
     <View style={styles.container}>
       <AppBar title="Detail Imunisasi" showBack={true} style={styles.appBar} />
-      <ScrollView style={styles.mainContainer}>
-        <Card.ImunisasiCard small />
+      <ScrollView
+        style={styles.mainContainer}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}>
+        <CustomCard.ImunisasiCard small />
         <View style={styles.rowTop}>
           <View style={styles.rowContent}>
             <Text style={styles.textTopCaption} variant={'labelMedium'}>
@@ -110,6 +144,7 @@ const HistoryDetailScreen = () => {
           {CHART_BUTTON.map((item, index) => {
             return (
               <CustomButton
+                key={item + index}
                 mode={selectedChart == item.key ? 'contained' : 'outlined'}
                 labelStyle={{
                   color:
@@ -134,14 +169,52 @@ const HistoryDetailScreen = () => {
             <Text>Permenkes no. 2 tahun 2020</Text>
           </View>
           <View>
-            <View style={styles.rowTop}>
-              <View style={styles.verticalLabel} />
-              <View>
-                <Text>Label</Text>
-                <Text>Value</Text>
-              </View>
-            </View>
+            {CHART_OPT[selectedChart].map((item, index) => {
+              const LABELED = item.split('#');
+              return (
+                <View key={item + index} style={styles.rowTop}>
+                  <View style={styles.verticalLabel} />
+                  <View>
+                    <Text>{LABELED[0]}</Text>
+                    <Text>{LABELED[1]}</Text>
+                  </View>
+                </View>
+              );
+            })}
           </View>
+        </View>
+        <View style={styles.chartContainer}>
+          <Card style={styles.chartCard}>
+            <View style={styles.chartTitleContainer}>
+              <Text variant={'titleMedium'} style={styles.textCardTitle}>
+                Berat Badan Menurut Tinggi Badan Anak Perempuan
+              </Text>
+            </View>
+            <LineChart
+              spacing={30}
+              width={screenWidth - 140}
+              height={320}
+              data={data_chart}
+              color={Colors.COLOR_PRIMARY}
+              dataPointsColor={Colors.COLOR_PRIMARY}
+            />
+          </Card>
+          <Card style={styles.chartCard}>
+            <View style={styles.chartTitleContainer}>
+              <Text variant={'titleMedium'} style={styles.textCardTitle}>
+                Berat Badan Menurut Umur Anak Perempuan
+              </Text>
+            </View>
+            <BarChart
+              spacing={30}
+              width={screenWidth - 140}
+              frontColor={Colors.COLOR_PRIMARY}
+              height={320}
+              data={data_chart}
+              color={Colors.COLOR_PRIMARY}
+              dataPointsColor={Colors.COLOR_PRIMARY}
+            />
+          </Card>
         </View>
       </ScrollView>
     </View>
@@ -153,6 +226,11 @@ export default HistoryDetailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.COLOR_BACKGROUND,
+  },
+
+  scrollContent: {
+    paddingBottom: Scaler.scaleSize(120),
   },
 
   appBar: {
@@ -189,6 +267,20 @@ const styles = StyleSheet.create({
     marginRight: Size.SIZE_14,
   },
 
+  chartContainer: {
+    marginTop: Size.SIZE_24,
+  },
+
+  chartCard: {
+    padding: Size.SIZE_14,
+    backgroundColor: Colors.COLOR_WHITE,
+  },
+
+  chartTitleContainer: {
+    marginBottom: Size.SIZE_14,
+    marginLeft: Size.SIZE_14,
+  },
+
   // Text
 
   textSubtitle: {
@@ -200,6 +292,10 @@ const styles = StyleSheet.create({
   },
 
   textTopValue: {
+    fontWeight: 'bold',
+  },
+
+  textCardTitle: {
     fontWeight: 'bold',
   },
 });

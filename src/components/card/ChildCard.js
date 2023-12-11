@@ -8,7 +8,7 @@ import CustomButton from '../Button';
 
 const ChildCard = ({onButtonPress}) => {
   return (
-    <Card>
+    <Card style={{backgroundColor: Colors.COLOR_WHITE}}>
       <Card.Content>
         <View style={styles.topRow}>
           <View style={styles.circle}>

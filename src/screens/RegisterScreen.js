@@ -6,9 +6,28 @@ import {Colors, Scaler, Size} from '../styles';
 import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
 import {useNavigation} from '@react-navigation/native';
+import {addToDB, isDBPathExist} from '../utils/Database';
 
 const RegisterScreen = () => {
+  const [phone, setPhone] = React.useState();
+
+  // Nav
   const navigation = useNavigation();
+
+  // FUNCTIONAL
+  const onRegisterPressed = async () => {
+    const isUserExist = await isDBPathExist(`Users/${phone}`);
+
+    if (!isUserExist) {
+      navigation.navigate('SignUpProfile', {
+        phone: phone,
+      });
+    } else {
+      console.log('User exist');
+    }
+  };
+
+  // RENDER FUNC
 
   return (
     <View style={styles.container}>
@@ -50,9 +69,11 @@ const RegisterScreen = () => {
           mode={'outlined'}
           placeholder="Masukan nomor telponmu disini..."
           placeholderTextColor={Colors.COLOR_GREY}
+          onChangeText={te => setPhone(te)}
+          value={phone}
         />
         <Gap height={20} />
-        <CustomButton onPress={() => navigation.navigate('SignUpProfile')}>
+        <CustomButton disabled={!phone} onPress={() => onRegisterPressed()}>
           Daftar
         </CustomButton>
         <Gap height={28} />

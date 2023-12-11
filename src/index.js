@@ -5,6 +5,8 @@ import {AuthContext} from './context';
 import {retrieveData} from './utils/store';
 import {AuthStackScreen} from './navigator/AuthNavigator';
 import {MainScreen} from './navigator/MainNavigator';
+import {StatusBar} from 'react-native';
+import {Colors} from './styles';
 
 const App = () => {
   //handle auth flow
@@ -16,18 +18,21 @@ const App = () => {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+            user: action.user,
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
             userToken: action.token,
+            user: action.user,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             userToken: null,
+            user: null,
           };
       }
     },
@@ -35,6 +40,7 @@ const App = () => {
       isLoading: true,
       isSignout: false,
       userToken: null,
+      user: null,
     },
   );
 
@@ -67,7 +73,7 @@ const App = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token', user: data});
       },
       signOut: () => dispatch({type: 'SIGN_OUT'}),
       signUp: async data => {
@@ -86,12 +92,17 @@ const App = () => {
 
         dispatch({type: 'RESTORE_TOKEN', token: data});
       },
+      user: state.user,
     }),
-    [],
+    [state],
   );
 
   return (
     <NavigationContainer>
+      <StatusBar
+        backgroundColor={Colors.COLOR_BACKGROUND}
+        barStyle={'dark-content'}
+      />
       <AuthContext.Provider value={authContext}>
         {state.isLoading ? (
           <SplashStack />

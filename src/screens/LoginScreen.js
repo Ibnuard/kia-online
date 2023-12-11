@@ -8,11 +8,32 @@ import {FONT_SIZE_16} from '../styles/typography';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../context';
+import {getDBdata, isDBPathExist} from '../utils/Database';
 
 const LoginScreen = () => {
+  const [phone, setPhone] = React.useState();
+
   const navigation = useNavigation();
 
   const {signIn} = React.useContext(AuthContext);
+
+  const onLogin = async () => {
+    const isUserExist = await isDBPathExist(`Users/${phone}`);
+
+    if (isUserExist) {
+      try {
+        const user = (await getDBdata(`Users/${phone}`)).data();
+        if (user) {
+          signIn(user);
+        }
+        console.log(user);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log('Users not found');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -55,9 +76,13 @@ const LoginScreen = () => {
           mode={'outlined'}
           placeholder="Masukan nomor telponmu disini..."
           placeholderTextColor={Colors.COLOR_GREY}
+          onChangeText={te => setPhone(te)}
+          value={phone}
         />
         <Gap height={20} />
-        <CustomButton onPress={() => signIn()}>Masuk</CustomButton>
+        <CustomButton disabled={!phone} onPress={() => onLogin()}>
+          Masuk
+        </CustomButton>
         <Gap height={28} />
         <View style={styles.bottomContainer}>
           <Text variant={'bodyMedium'}>Belum pernah mendaftar?</Text>

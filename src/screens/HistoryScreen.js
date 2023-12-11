@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     marginBottom: Size.SIZE_14,
+    backgroundColor: Colors.COLOR_WHITE,
   },
 
   traillContainer: {

@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Size} from '../styles';
-import {ImunisasiCard} from '../components';
 import {useNavigation} from '@react-navigation/native';
+import {Card} from '../components';
 
 const RegisteredImunScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <ImunisasiCard
+      <Card.ImunisasiCard
         onRegsiterPress={() => navigation.navigate('DaftarImunisasi')}
       />
     </View>
