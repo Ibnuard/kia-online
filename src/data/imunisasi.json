@@ -1,0 +1,15 @@
+[
+  {"name": "Imunisasi Hepatitis B", "category": "A0"},
+  {"name": "Imunisasi BCG", "category": "A1"},
+  {"name": "Imunisasi Polio Tetes 1", "category": "A2"},
+  {"name": "Imunisasi DPT-hb-Hib 1", "category": "A3"},
+  {"name": "Imunisasi Polio Tetes 2", "category": "A2"},
+  {"name": "Imuniasi DPT-HB-Hib 2", "category": "A3"},
+  {"name": "Imunisasi Polio Tetes 3", "category": "A2"},
+  {"name": "Imunisasi DPT-HB-hib 3", "category": "A3"},
+  {"name": "Imunisasi Polio Tetes 4", "category": "A2"},
+  {"name": "Imunisasi Polio Suntik (IPV)", "category": "A4"},
+  {"name": "Campak-Rubella (MR)", "category": "A5"},
+  {"name": "DPT-Hib-HB Lanjutan", "category": "A3"},
+  {"name": "Campak-Rubella (MR) Lanjutan", "category": "A5"}
+]

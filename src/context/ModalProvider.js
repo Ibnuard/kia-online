@@ -47,7 +47,6 @@ export const ModalProvider = ({children}) => {
         });
       },
       changeModal: ms => {
-        console.log(ms);
         dispatch({
           type: 'CHANGE_MODAL',
           visible: true,

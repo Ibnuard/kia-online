@@ -5,10 +5,10 @@ import {ASSETS} from '../utils/assetsLoader';
 import {Colors, Scaler, Size} from '../styles';
 import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {addToDB, isDBPathExist} from '../utils/Database';
 import ModalView from '../components/modal';
-import {ModalContext} from '../context';
+import {ModalContext, RoleContext} from '../context';
 
 const RegisterScreen = () => {
   const [phone, setPhone] = React.useState();
@@ -20,10 +20,16 @@ const RegisterScreen = () => {
   // Nav
   const navigation = useNavigation();
 
+  // stat
+  const {role} = React.useContext(RoleContext);
+
+  console.log('role - > ' + role);
+
   // FUNCTIONAL
   const onRegisterPressed = async () => {
     await showModal({type: 'loading'});
-    const isUserExist = await isDBPathExist(`Users/${phone}`);
+    const ROLE_PATH = role == 'user' ? 'Users' : 'Admins';
+    const isUserExist = await isDBPathExist(`${ROLE_PATH}/${phone}`);
 
     if (!isUserExist) {
       await hideModal();
@@ -59,7 +65,7 @@ const RegisterScreen = () => {
         </View>
         <View style={styles.bgContainer}>
           <Image
-            source={ASSETS.hero2}
+            source={ASSETS.hero[role][1]}
             style={styles.heroImg}
             resizeMode={'contain'}
           />
@@ -83,6 +89,7 @@ const RegisterScreen = () => {
           placeholderTextColor={Colors.COLOR_GREY}
           onChangeText={te => setPhone(te)}
           value={phone}
+          keyboardType={'phone-pad'}
         />
         <Gap height={20} />
         <CustomButton disabled={!phone} onPress={() => onRegisterPressed()}>
@@ -130,8 +137,9 @@ const styles = StyleSheet.create({
 
   heroImg: {
     alignSelf: 'center',
-    height: Scaler.scaleSize(400),
-    width: Scaler.scaleSize(220),
+    height: '100%',
+    width: Scaler.scaleSize(420),
+    marginTop: Scaler.scaleSize(48),
   },
 
   topLogo: {
@@ -147,8 +155,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    height: 50,
-    width: 100,
+    height: 40,
+    width: 40,
   },
 
   bottomContainer: {

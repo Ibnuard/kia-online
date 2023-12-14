@@ -6,6 +6,8 @@ import {StatusBar, StyleSheet, View} from 'react-native';
 import AppBar from '../components/AppBar';
 import {Colors} from '../styles';
 import {MyTabBar} from '../components/TabBar';
+import {AuthContext} from '../context';
+import NonRegisteredImunScreen from '../screens/NonRegisteredImunScreen';
 
 // TopBar
 const Tab = createMaterialTopTabNavigator();
@@ -14,6 +16,8 @@ const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export const ImunisasiStack = () => {
+  const {user} = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -22,13 +26,13 @@ export const ImunisasiStack = () => {
       />
       <AppBar
         titlePosition="left"
-        title="Kategori Imunisasi"
+        title={'Kategori Imunisasi'}
         style={styles.appBar}
       />
       <Tab.Navigator tabBar={props => <MyTabBar key={props} {...props} />}>
         <Tab.Screen
           name={'BelumTerdaftar'}
-          component={RegisteredImunScreen}
+          component={NonRegisteredImunScreen}
           options={{
             title: 'Belum Terdaftar',
           }}

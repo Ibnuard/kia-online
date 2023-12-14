@@ -2,21 +2,43 @@ import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Colors, Scaler, Size} from '../styles';
 import {ActivityIndicator, Card, Text} from 'react-native-paper';
-import {CustomButton, Gap, Card as CustomCard} from '../components';
-import {useFocusEffect} from '@react-navigation/native';
+import {CustomButton, Gap, Card as CustomCard, EmptyList} from '../components';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {ASSETS} from '../utils/assetsLoader';
-import {AuthContext} from '../context';
+import {AuthContext, ModalContext} from '../context';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {MyTabBar} from '../components/TabBar';
+import {imunisasiCollection, usersCollection} from '../utils/Database';
+import {selisihHari} from '../utils/utils';
+import ModalView from '../components/modal';
 
 const HomeScreen = () => {
   const [news, setNews] = React.useState([]);
+  const [jadwal, setJadwal] = React.useState();
+  const [jadwalDone, setJadwalDone] = React.useState();
+  const [recentImunisasi, setRecentImunisasi] = React.useState();
+
+  // Nav
+  const navigation = useNavigation();
 
   // User session
   const {user} = React.useContext(AuthContext);
+  const {showModal, changeModal, hideModal, modalState} =
+    React.useContext(ModalContext);
+
+  // TopBar
+  const Tab = createMaterialTopTabNavigator();
 
   console.log(user);
 
   React.useEffect(() => {
-    getNews();
+    if (user?.role == 'user') {
+      getNews();
+      getRecent();
+      return;
+    } else {
+      getJadwal();
+    }
 
     return () => null;
   }, []);
@@ -43,64 +65,232 @@ const HomeScreen = () => {
     }
   }
 
-  return (
-    <ScrollView
-      contentContainerStyle={{flexGrow: 1}}
-      style={styles.container}
-      showsVerticalScrollIndicator={false}>
-      <View style={styles.topContent}>
-        <Text style={styles.textHi} variant={'bodyMedium'}>
-          Halo, {user?.name}
-        </Text>
-      </View>
+  // recent
+  async function getRecent() {
+    try {
+      await usersCollection
+        .doc(user?.phone)
+        .collection('recent')
+        .onSnapshot(snap => {
+          let temp = [];
+          snap.forEach(doc => {
+            const data = doc.data();
+            const deadline = selisihHari(data?.jadwal);
+            if (deadline > 0) {
+              temp.push({...doc.data(), id: doc.id});
+            }
+          });
 
-      <Text style={styles.textTitle} variant={'titleMedium'}>
-        Jadwal Imunisasi Anak
-      </Text>
+          setRecentImunisasi(temp[0]);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      <Card mode={'contained'} style={styles.cardNoJadwal}>
-        <Card.Content>
-          <Text style={styles.textCardNoJadwal} variant={'labelMedium'}>
-            Belum ada jadwal imunisasi
+  // Admin
+  async function getJadwal() {
+    await imunisasiCollection
+      .orderBy('createdDate', 'desc')
+      .onSnapshot(snap => {
+        let temp = [];
+        let tempdone = [];
+        snap.forEach(doc => {
+          const data = doc.data();
+
+          if (selisihHari(data?.jadwal) >= 0) {
+            temp.push({...doc.data(), id: doc.id});
+          } else {
+            tempdone.push({...doc.data(), id: doc.id});
+          }
+        });
+
+        setJadwal(temp);
+        setJadwalDone(tempdone);
+      });
+  }
+
+  // admin on delete
+  async function onDeleteJadwal(id) {
+    await showModal({type: 'loading'});
+    try {
+      await imunisasiCollection
+        .doc(id)
+        .delete()
+        .then(async () => {
+          await changeModal({
+            type: 'popup',
+            message: 'Berhasil menghapus jadwal!',
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      await changeModal({
+        type: 'popup',
+        message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
+      });
+    }
+  }
+
+  //  RENDER USER CONTENT
+  function renderUserContent() {
+    return (
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        style={styles.container}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.topContent}>
+          <Text style={styles.textHi} variant={'bodyMedium'}>
+            Halo, {user?.name}
           </Text>
-        </Card.Content>
-      </Card>
-
-      <Text style={styles.textTitle} variant={'titleMedium'}>
-        Berita Terbaru
-      </Text>
-      <Gap height={10} />
-      <View style={styles.promoContainer}>
-        <Image
-          source={ASSETS.promo}
-          style={styles.promoImg}
-          resizeMode={'contain'}
-        />
-        <View style={styles.promoButtonContainer}>
-          <CustomButton
-            style={styles.promoButton}
-            labelStyle={styles.promoButtonLabel}>
-            Baca sekarang
-          </CustomButton>
         </View>
-      </View>
-      <Text style={styles.textTitle} variant={'titleMedium'}>
-        Buletin Kesehatan
-      </Text>
-      <Gap height={10} />
-      <View style={styles.newsContainer}>
-        {news && news.length ? (
-          news.map((item, index) => {
-            return <CustomCard.BeritaCard key={item + index} data={item} />;
-          })
+
+        <Text style={styles.textTitle} variant={'titleMedium'}>
+          Jadwal Imunisasi Anak
+        </Text>
+
+        {!recentImunisasi ? (
+          <Card mode={'contained'} style={styles.cardNoJadwal}>
+            <Card.Content>
+              <Text style={styles.textCardNoJadwal} variant={'labelMedium'}>
+                Belum ada jadwal imunisasi
+              </Text>
+            </Card.Content>
+          </Card>
         ) : (
-          <View style={styles.newsLoading}>
-            <ActivityIndicator />
+          <CustomCard.RecentJadwalCard
+            data={recentImunisasi}
+            onPress={() =>
+              navigation.jumpTo('Imunisasi', {
+                screen: 'KategoriNav',
+                params: {
+                  screen: 'Terdaftar',
+                },
+              })
+            }
+          />
+        )}
+
+        <Text style={styles.textTitle} variant={'titleMedium'}>
+          Berita Terbaru
+        </Text>
+        <Gap height={10} />
+        <View style={styles.promoContainer}>
+          <Image
+            source={ASSETS.promo}
+            style={styles.promoImg}
+            resizeMode={'contain'}
+          />
+          <View style={styles.promoButtonContainer}>
+            <CustomButton
+              style={styles.promoButton}
+              labelStyle={styles.promoButtonLabel}>
+              Baca sekarang
+            </CustomButton>
           </View>
+        </View>
+        <Text style={styles.textTitle} variant={'titleMedium'}>
+          Buletin Kesehatan
+        </Text>
+        <Gap height={10} />
+        <View style={styles.newsContainer}>
+          {news && news.length ? (
+            news.map((item, index) => {
+              return <CustomCard.BeritaCard key={item + index} data={item} />;
+            })
+          ) : (
+            <View style={styles.newsLoading}>
+              <ActivityIndicator />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    );
+  }
+
+  // List on going
+  function RenderAdminOnGoing() {
+    return (
+      <View style={styles.listModeContainer}>
+        {jadwal?.length ? (
+          <FlatList
+            data={jadwal}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <CustomCard.AdminImunisasiCard
+                data={item}
+                onPosPress={id => navigation.navigate('Jadwal', {data: item})}
+                onNegPress={() => onDeleteJadwal(item.id)}
+                onPress={() =>
+                  navigation.navigate('AdminAntrian', {
+                    data: item,
+                    isUpdate: true,
+                  })
+                }
+              />
+            )}
+          />
+        ) : (
+          <EmptyList title={'Belum ada jadwal tersedia'} />
         )}
       </View>
-    </ScrollView>
-  );
+    );
+  }
+
+  // Admin render
+  const renderAdminContent = () => {
+    return (
+      <View style={styles.containerTab} showsVerticalScrollIndicator={false}>
+        <View style={styles.topContentTab}>
+          <Text style={styles.textHi} variant={'bodyMedium'}>
+            Halo, {user?.name}
+          </Text>
+        </View>
+        <ModalView
+          visible={modalState.visible}
+          type={modalState.type}
+          message={modalState.message}
+          onPress={() => hideModal()}
+        />
+        <Tab.Navigator tabBar={props => <MyTabBar key={props} {...props} />}>
+          <Tab.Screen
+            name={'BelumTerdaftar'}
+            component={RenderAdminOnGoing}
+            options={{
+              title: 'Belum Dilaksanakan',
+            }}
+          />
+          <Tab.Screen
+            name="Terdaftar"
+            component={RenderAdminOnFinished}
+            options={{
+              title: 'Sudah Dilaksanakan',
+            }}
+          />
+        </Tab.Navigator>
+      </View>
+    );
+  };
+
+  // List ok
+  function RenderAdminOnFinished() {
+    return (
+      <View style={styles.listModeContainer}>
+        {jadwalDone?.length ? (
+          <FlatList
+            data={jadwalDone}
+            renderItem={({item, index}) => (
+              <CustomCard.AdminImunisasiCard data={item} />
+            )}
+          />
+        ) : (
+          <EmptyList title={'Belum ada jadwal tersedia'} />
+        )}
+      </View>
+    );
+  }
+
+  return user.role == 'user' ? renderUserContent() : renderAdminContent();
 };
 
 export default HomeScreen;
@@ -110,6 +300,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.COLOR_BACKGROUND,
     padding: Size.SIZE_24,
+  },
+
+  containerTab: {
+    flex: 1,
+    backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
   cardNoJadwal: {
@@ -122,6 +317,12 @@ const styles = StyleSheet.create({
 
   topContent: {
     marginBottom: Size.SIZE_20,
+  },
+
+  topContentTab: {
+    marginBottom: Size.SIZE_20,
+    paddingHorizontal: Size.SIZE_24,
+    paddingTop: Size.SIZE_24,
   },
 
   promoContainer: {
@@ -156,6 +357,12 @@ const styles = StyleSheet.create({
   },
 
   newsLoading: {flex: 1, justifyContent: 'center'},
+
+  // ADMIN
+  listModeContainer: {
+    flex: 1,
+    padding: Size.SIZE_24,
+  },
 
   // text
 

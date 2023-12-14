@@ -8,6 +8,10 @@ import {MainScreen} from './navigator/MainNavigator';
 import {StatusBar} from 'react-native';
 import {Colors} from './styles';
 import {ModalProvider} from './context/ModalProvider';
+import {RoleProvider} from './context/RoleProvider';
+import moment from 'moment';
+import 'moment/locale/id'; // without this line it didn't work
+moment.locale('id');
 
 const App = () => {
   //handle auth flow
@@ -109,7 +113,9 @@ const App = () => {
           {state.isLoading ? (
             <SplashStack />
           ) : state.userToken == null ? (
-            <AuthStackScreen />
+            <RoleProvider>
+              <AuthStackScreen />
+            </RoleProvider>
           ) : (
             <MainScreen />
           )}

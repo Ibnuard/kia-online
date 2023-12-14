@@ -9,12 +9,20 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {getDBdata, usersCollection} from '../utils/Database';
+import {
+  getDBdata,
+  imunisasiCollection,
+  usersCollection,
+} from '../utils/Database';
 import {AuthContext, ModalContext} from '../context';
 import ModalView from '../components/modal';
+import moment from 'moment';
 
 const DaftarImunisasiScreen = () => {
   const [childList, setChildList] = React.useState();
+  const [modalOk, setModalOk] = React.useState(false);
+  const [antrian, setAntrian] = React.useState();
+  const [selectedChild, setSelectedChild] = React.useState();
 
   // Nav
   const navigation = useNavigation();
@@ -22,6 +30,8 @@ const DaftarImunisasiScreen = () => {
 
   const IS_CHILD_LIST = route.name == 'ChildList';
   const IS_UPDATED = route.params?.updated;
+
+  const DATA_IMUNISASI = route?.params?.data;
 
   // Stat
   const {user} = React.useContext(AuthContext);
@@ -31,11 +41,53 @@ const DaftarImunisasiScreen = () => {
     React.useContext(ModalContext);
 
   // Funcrional
-  function onGetTicket() {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'TiketImunisasi'}],
-    });
+  async function onGetTicket(item) {
+    setSelectedChild(item);
+    await showModal({type: 'loading'});
+    try {
+      const getAntrian = await imunisasiCollection
+        .doc(DATA_IMUNISASI?.id)
+        .collection('Registered')
+        .count()
+        .get();
+
+      const sAntrian = getAntrian.data().count + 1;
+
+      setAntrian(sAntrian);
+
+      await usersCollection
+        .doc(user?.phone)
+        .collection('recent')
+        .add({
+          ...DATA_IMUNISASI,
+          createdDate: moment().format(),
+        });
+
+      imunisasiCollection
+        .doc(DATA_IMUNISASI.id)
+        .collection('Registered')
+        .doc(item.id)
+        .set({
+          ...item,
+          parentId: user?.phone,
+          createdDate: moment().format(),
+          antrian: sAntrian,
+        })
+        .then(async () => {
+          setModalOk(true);
+          await changeModal({
+            type: 'popup',
+            message: 'Anda telah berhasil mendaftar!',
+          });
+        });
+    } catch (error) {
+      setModalOk(false);
+      await changeModal({
+        type: 'popup',
+        message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
+      });
+      console.log(error);
+    }
   }
 
   useFocusEffect(
@@ -72,12 +124,14 @@ const DaftarImunisasiScreen = () => {
         .doc(id)
         .delete()
         .then(async () => {
+          setModalOk(true);
           await changeModal({
             type: 'popup',
             message: 'Biodata berhasil di hapus!',
           });
         });
     } catch (error) {
+      setModalOk(false);
       await changeModal({
         type: 'popup',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
@@ -96,7 +150,7 @@ const DaftarImunisasiScreen = () => {
         <View style={styles.mainContainer}>
           {!IS_CHILD_LIST && (
             <Text variant={'titleLarge'} style={styles.textTitle}>
-              Daftar imunisasi untuk mendapatkan nomor antrian
+              Pilih biodata anak untuk didafaftarkan
             </Text>
           )}
           {/* <CustomButton
@@ -119,7 +173,7 @@ const DaftarImunisasiScreen = () => {
                 <Card.ChildCard
                   data={item}
                   isFromEdit={IS_CHILD_LIST}
-                  onButtonPress={() => onGetTicket()}
+                  onButtonPress={() => onGetTicket(item)}
                   onNegPress={id => onDeleteChild(id)}
                   onPosPress={id =>
                     navigation.navigate('AddChild', {
@@ -146,6 +200,23 @@ const DaftarImunisasiScreen = () => {
         visible={modalState.visible}
         message={modalState.message}
         onPress={() => hideModal()}
+        onModalHide={() =>
+          modalOk && !IS_UPDATED && !IS_CHILD_LIST
+            ? navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'TiketImunisasi',
+                    params: {
+                      imunisasi: DATA_IMUNISASI,
+                      child: selectedChild,
+                      antrian: antrian,
+                    },
+                  },
+                ],
+              })
+            : null
+        }
       />
     </View>
   );

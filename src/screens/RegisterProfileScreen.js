@@ -14,7 +14,7 @@ import {FONT_SIZE_16} from '../styles/typography';
 import {CustomButton, Gap} from '../components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Keyboard} from 'react-native';
-import {AuthContext, ModalContext} from '../context';
+import {AuthContext, ModalContext, RoleContext} from '../context';
 import {addToDB, updateDB} from '../utils/Database';
 import ModalView from '../components/modal';
 
@@ -28,6 +28,11 @@ const RegisterProfileScreen = () => {
 
   const PHONE = route?.params?.phone;
   const ROUTE_NAME = route?.name;
+
+  // stat
+  const {role} = React.useContext(RoleContext);
+
+  console.log('role - > ' + role);
 
   const IS_EDIT = ROUTE_NAME == 'EditProfile';
 
@@ -52,6 +57,8 @@ const RegisterProfileScreen = () => {
   });
 
   const onRegister = async () => {
+    const ROLE_PATH = role == 'user' ? 'Users' : 'Admins';
+
     setErrorInput({
       name: null,
       email: null,
@@ -116,10 +123,12 @@ const RegisterProfileScreen = () => {
         email: email,
         phone: phone,
         alamat: al,
-        role: 'user',
+        role: role,
       };
 
-      await addToDB(`Users/${phone}`, data).then(async () => {
+      console.log(data);
+
+      await addToDB(`${ROLE_PATH}/${phone}`, data).then(async () => {
         setModalOkType('positive');
         await changeModal({
           type: 'popup',
@@ -198,13 +207,15 @@ const RegisterProfileScreen = () => {
           />
           <Gap height={24} />
           <Text variant={'labelLarge'} style={styles.labelTitle}>
-            Alamat
+            Alamat {role == 'user' ? '' : 'Posyandu'}
           </Text>
           <TextInput
             style={styles.addressInput}
             multiline
             mode={'outlined'}
-            placeholder="Masukan alamatmu disini..."
+            placeholder={`Masukan ${
+              role == 'user' ? 'alamatmu' : 'alamat posyandu'
+            } disini...`}
             placeholderTextColor={Colors.COLOR_GREY}
             onChange={() => {
               setErrorInput({alamat: null});

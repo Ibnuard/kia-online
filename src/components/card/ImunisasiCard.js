@@ -5,33 +5,75 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors, Scaler, Size} from '../../styles';
 import CustomButton from '../Button';
 import Gap from '../Gap';
+import moment from 'moment';
+import {selisihHari} from '../../utils/utils';
 
 const ImunisasiCard = props => {
   const {onRegsiterPress} = props;
+  const DATA = props?.data;
+  const USER = props?.user;
+
+  const DEADLINE = selisihHari(DATA?.jadwal);
+
   return (
-    <Card style={{backgroundColor: Colors.COLOR_WHITE}} {...props}>
+    <Card
+      style={{backgroundColor: Colors.COLOR_WHITE, marginVertical: 8}}
+      {...props}>
       {!props.small ? (
         <Card.Content>
-          {!props.isHistory ? (
-            <Chip style={styles.chipDisable} textStyle={styles.chipDisableText}>
-              {'Kamu belum terdaftar di sesi ini'}
-            </Chip>
+          {props.isHistory ? (
+            <>
+              <Chip
+                style={styles.chipDisable}
+                textStyle={styles.chipDisableText}>
+                Imunisasi telah dilaksanakan
+              </Chip>
+              <Gap height={14} />
+            </>
+          ) : props.isRegistered ? (
+            <>
+              <Chip style={styles.chipActive} textStyle={styles.chipActiveText}>
+                {DEADLINE > 0
+                  ? `Imunisasi dalam ${DEADLINE} hari lagi`
+                  : DEADLINE == 0
+                  ? 'Imunisasi sedang berlangsung'
+                  : ''}
+              </Chip>
+              <Gap height={14} />
+            </>
           ) : (
-            <Chip style={styles.chipActive} textStyle={styles.chipActiveText}>
-              Imunisasi telah dilaksanakan
-            </Chip>
+            <>
+              <Chip
+                style={
+                  DATA?.registered ? styles.chipActive : styles.chipDisable
+                }
+                textStyle={
+                  DATA?.registered
+                    ? styles.chipActiveText
+                    : styles.chipDisableText
+                }>
+                {DATA?.registered
+                  ? 'Anak anda telah terdaftar di sesi ini'
+                  : 'Anak anda belum terdaftar di sesi ini'}
+              </Chip>
+              <Gap height={14} />
+            </>
           )}
-          <Gap height={14} />
+
           <View style={styles.topRow}>
             <View style={styles.circle}>
               <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
             </View>
             <View>
               <Text style={styles.textTitle} variant={'titleMedium'}>
-                Imuniassi Polio
+                {DATA?.name || DATA?.child?.name}
               </Text>
               <Text style={styles.textLabel} variant={'labelSmall'}>
-                Desc
+                {props?.isHistory
+                  ? DATA?.imunisasi?.name
+                  : `Dibuat pada ${moment(DATA?.createdDate).format(
+                      'DD MMMM YYYY',
+                    )}`}
               </Text>
             </View>
           </View>
@@ -40,15 +82,20 @@ const ImunisasiCard = props => {
           <Gap height={14} />
           <View style={styles.topRow}>
             <View style={styles.bottomLeft}>
-              <Text variant={'labelSmall'}>Tanggal</Text>
-              <Text style={styles.textTitle} variant={'titleMedium'}>
-                Value
+              <Text variant={'labelSmall'}>Tanggal Imunisasi</Text>
+              <Text style={styles.textTitle} variant={'titleSmall'}>
+                {moment(DATA?.jadwal || DATA?.imunisasi?.jadwal).format(
+                  'DD MMMM YYYY',
+                )}
               </Text>
             </View>
             <View style={styles.bottomRight}>
               <Text variant={'labelSmall'}>Tempat Imunisasi</Text>
-              <Text style={styles.textTitle} variant={'titleMedium'}>
-                Value
+              <Text
+                style={styles.textTitle}
+                variant={'titleSmall'}
+                numberOfLines={1}>
+                {DATA?.alamat || DATA?.imunisasi?.alamat}
               </Text>
             </View>
           </View>
@@ -56,27 +103,36 @@ const ImunisasiCard = props => {
             <>
               <Gap height={14} />
               <CustomButton onPress={onRegsiterPress}>
-                Daftar Imunisasi
+                {props?.isRegistered ? 'Lihat Tiket' : 'Daftar Imunisasi'}
               </CustomButton>
             </>
           )}
         </Card.Content>
       ) : (
         <Card.Content>
-          <Chip style={styles.chipDisable} textStyle={styles.chipDisableText}>
-            Kamu belum terdaftar di sesi ini
-          </Chip>
-          <Gap height={14} />
+          {!props?.admin && (
+            <>
+              <Chip
+                style={styles.chipDisable}
+                textStyle={styles.chipDisableText}>
+                {props?.isHistory
+                  ? 'Imunisasi telah dilaksanakan'
+                  : 'Kamu belum terdaftar di sesi ini'}
+              </Chip>
+              <Gap height={14} />
+            </>
+          )}
+
           <View style={styles.topRow}>
             <View style={styles.circle}>
               <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
             </View>
             <View style={styles.leftTop}>
               <Text style={styles.textTitle} variant={'titleMedium'}>
-                Imuniassi Polio
+                {DATA?.name}
               </Text>
               <Text style={styles.textLabel} variant={'labelSmall'}>
-                Desc
+                {moment(DATA?.jadwal).format('DD MMMM YYYY')}
               </Text>
             </View>
             <View style={styles.verticalDiv} />
@@ -85,7 +141,7 @@ const ImunisasiCard = props => {
                 Antrian
               </Text>
               <Text variant={'titleLarge'} style={styles.textAntrean}>
-                #24
+                #{USER?.antrian || DATA?.antrian}
               </Text>
             </View>
           </View>
@@ -146,6 +202,7 @@ const styles = StyleSheet.create({
 
   bottomRight: {
     flex: 1,
+    alignItems: 'flex-end',
   },
 
   verticalDiv: {

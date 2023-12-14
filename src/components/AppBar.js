@@ -15,7 +15,11 @@ const AppBar = ({
   return (
     <Appbar.Header style={[{backgroundColor: Colors.COLOR_WHITE}, style]}>
       {showBack && <Appbar.BackAction onPress={() => navigation.goBack()} />}
-      {!showBack && titlePosition == 'left' ? <Gap width={14} /> : null}
+      {!showBack && titlePosition == 'left' ? (
+        <Gap width={14} />
+      ) : (
+        <Gap width={titlePosition == 'left' ? 50 : 0} />
+      )}
       <Appbar.Content
         style={{
           ...styles[`content${titlePosition}`],

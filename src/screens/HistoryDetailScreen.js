@@ -2,27 +2,43 @@ import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import AppBar from '../components/AppBar';
 import {Colors, Scaler, Size} from '../styles';
-import {Card as CustomCard, CustomButton} from '../components';
+import {Card as CustomCard, CustomButton, Gap} from '../components';
 import {Card, Divider, Text} from 'react-native-paper';
 import {BarChart, LineChart} from 'react-native-gifted-charts';
+import {useRoute} from '@react-navigation/native';
+import {hitungUmur} from '../utils/utils';
+import {usersCollection} from '../utils/Database';
 
 const HistoryDetailScreen = () => {
   const [selectedChart, setSelectedChart] = React.useState('BBTB');
+  const [rekapHasilBBTB, setRekapHasilBBTB] = React.useState();
+  const [rekapHasilBBUM, setRekapHasilBBUM] = React.useState();
+  const [rekapHasilTBUM, setRekapHasilTBUM] = React.useState();
 
   const screenWidth = Dimensions.get('window').width;
+
+  const route = useRoute();
+
+  console.log(route?.params?.data);
+  const CHILD_DATA = route.params?.data?.child;
+  const IMUNISASI_DATA = route?.params?.data?.imunisasi;
+
+  const HASIL_IMUN = CHILD_DATA?.hasilImunisasi;
+
+  const gender = CHILD_DATA?.gender == 'male' ? 'Laki - laki' : 'Perempuan';
 
   const CHART_BUTTON = [
     {
       key: 'BBTB',
-      title: 'BB menurut TB anak perempuan',
+      title: `BB menurut TB anak ${gender}`,
     },
     {
       key: 'BBUM',
-      title: 'BB menurut Umur anak perempuan',
+      title: `BB menurut Umur anak ${gender}`,
     },
     {
       key: 'TBUM',
-      title: 'TB menurut Umur anak perempuan',
+      title: `TB menurut Umur anak ${gender}`,
     },
   ];
 
@@ -48,11 +64,71 @@ const HistoryDetailScreen = () => {
     ],
   };
 
+  React.useEffect(() => {
+    getRecap();
+  }, []);
+
+  async function getRecap() {
+    try {
+      await usersCollection
+        .doc(CHILD_DATA?.parentId)
+        .collection('childs')
+        .doc(CHILD_DATA?.id)
+        .collection('imunisasi')
+        .onSnapshot(snap => {
+          let temp = [];
+          snap.forEach(doc => {
+            temp.push({...doc.data(), id: doc?.id});
+          });
+
+          if (temp.length) {
+            // BB TB
+            let newData = [{value: 0, label: 0}];
+            for (const data of temp) {
+              const bd = {value: data.bb, label: data.tb};
+              newData.push(bd);
+            }
+
+            // BB UM
+            let newDataBBUM = [{value: 0, label: 0}];
+            for (const data of temp) {
+              const bd = {value: data.bb, label: data.umur};
+              newDataBBUM.push(bd);
+            }
+
+            // TB UM
+            let newDataTBUM = [{value: 0, label: 0}];
+            for (const data of temp) {
+              const bd = {value: data.tb, label: data.umur};
+              newDataTBUM.push(bd);
+            }
+
+            setRekapHasilTBUM(newDataTBUM);
+            setRekapHasilBBUM(newDataBBUM);
+            setRekapHasilBBTB(newData);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // LINE CHART DATA
-  const data_chart = [
-    {value: 8, label: 20},
-    {value: 10, label: 18},
-  ];
+  const getKesimpulan = () => {
+    switch (selectedChart) {
+      case 'BBTB':
+        return HASIL_IMUN?.bbtb;
+        break;
+      case 'BBUM':
+        return HASIL_IMUN?.bbum;
+        break;
+      case 'TBUM':
+        return HASIL_IMUN?.tbum;
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -61,32 +137,28 @@ const HistoryDetailScreen = () => {
         style={styles.mainContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        <CustomCard.ImunisasiCard small />
+        <CustomCard.ImunisasiCard
+          data={{...IMUNISASI_DATA, antrian: CHILD_DATA?.antrian}}
+          small
+          isHistory
+        />
         <View style={styles.rowTop}>
-          <View style={styles.rowContent}>
-            <Text style={styles.textTopCaption} variant={'labelMedium'}>
-              Kode Booking
-            </Text>
-            <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
-            </Text>
-          </View>
           <View style={styles.rowContent}>
             <Text style={styles.textTopCaption} variant={'labelMedium'}>
               Nama Lengkap
             </Text>
             <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
+              {CHILD_DATA?.name}
             </Text>
           </View>
         </View>
         <View style={styles.rowTop}>
           <View style={styles.rowContent}>
             <Text style={styles.textTopCaption} variant={'labelMedium'}>
-              Umur anak
+              Umur
             </Text>
             <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
+              {hitungUmur(CHILD_DATA?.date)} tahun
             </Text>
           </View>
           <View style={styles.rowContent}>
@@ -94,16 +166,17 @@ const HistoryDetailScreen = () => {
               Jenis kelamin
             </Text>
             <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
+              {CHILD_DATA?.gender == 'male' ? 'Laki - laki' : 'Perempuan'}
             </Text>
           </View>
         </View>
+        <Gap height={14} />
         <View>
           <Text style={styles.textTopCaption} variant={'labelMedium'}>
             Alamat
           </Text>
           <Text style={styles.textTopValue} variant={'bodyLarge'}>
-            1334
+            {CHILD_DATA?.alamat}
           </Text>
         </View>
         <Divider style={styles.divider} bold />
@@ -116,7 +189,7 @@ const HistoryDetailScreen = () => {
               Tinggi badan
             </Text>
             <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
+              {HASIL_IMUN?.tb} cm
             </Text>
           </View>
           <View style={styles.rowContent}>
@@ -124,7 +197,7 @@ const HistoryDetailScreen = () => {
               Berat badan
             </Text>
             <Text style={styles.textTopValue} variant={'bodyLarge'}>
-              1334
+              {HASIL_IMUN?.bb} kg
             </Text>
           </View>
         </View>
@@ -133,14 +206,18 @@ const HistoryDetailScreen = () => {
             Catatan
           </Text>
           <Text style={styles.textTopValue} variant={'bodyLarge'}>
-            1334
+            {HASIL_IMUN?.catatan || '-'}
           </Text>
         </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           overScrollMode={'never'}
-          style={{flexGrow: 0, paddingVertical: Size.SIZE_14}}>
+          style={{
+            flexGrow: 0,
+            paddingVertical: Size.SIZE_14,
+            marginTop: Size.SIZE_14,
+          }}>
           {CHART_BUTTON.map((item, index) => {
             return (
               <CustomButton
@@ -159,6 +236,14 @@ const HistoryDetailScreen = () => {
             );
           })}
         </ScrollView>
+        <View style={{paddingVertical: Size.SIZE_14}}>
+          <Text style={styles.textTopCaption} variant={'labelMedium'}>
+            Kondisi Anak
+          </Text>
+          <Text style={styles.textTopValue} variant={'bodyLarge'}>
+            {getKesimpulan()}
+          </Text>
+        </View>
         <View>
           <View style={styles.rowTop}>
             <Text
@@ -184,37 +269,49 @@ const HistoryDetailScreen = () => {
           </View>
         </View>
         <View style={styles.chartContainer}>
-          <Card style={styles.chartCard}>
-            <View style={styles.chartTitleContainer}>
-              <Text variant={'titleMedium'} style={styles.textCardTitle}>
-                Berat Badan Menurut Tinggi Badan Anak Perempuan
-              </Text>
-            </View>
-            <LineChart
-              spacing={30}
-              width={screenWidth - 140}
-              height={320}
-              data={data_chart}
-              color={Colors.COLOR_PRIMARY}
-              dataPointsColor={Colors.COLOR_PRIMARY}
-            />
-          </Card>
-          <Card style={styles.chartCard}>
-            <View style={styles.chartTitleContainer}>
-              <Text variant={'titleMedium'} style={styles.textCardTitle}>
-                Berat Badan Menurut Umur Anak Perempuan
-              </Text>
-            </View>
-            <BarChart
-              spacing={30}
-              width={screenWidth - 140}
-              frontColor={Colors.COLOR_PRIMARY}
-              height={320}
-              data={data_chart}
-              color={Colors.COLOR_PRIMARY}
-              dataPointsColor={Colors.COLOR_PRIMARY}
-            />
-          </Card>
+          {selectedChart == 'BBTB' ? (
+            <Card style={styles.chartCard}>
+              <View style={styles.chartTitleContainer}>
+                <Text variant={'titleMedium'} style={styles.textCardTitle}>
+                  Berat Badan Menurut Tinggi Badan Anak{' '}
+                  {CHILD_DATA?.gender == 'male' ? 'Laki - laki' : 'Perempuan'}
+                </Text>
+              </View>
+              <LineChart
+                spacing={30}
+                width={screenWidth - 140}
+                height={320}
+                data={rekapHasilBBTB || [{value: 0, label: 0}]}
+                yAxisLabelTexts={[
+                  0, 20, 40, 80, 90, 100, 120, 140, 160, 180, 200,
+                ]}
+                color={Colors.COLOR_PRIMARY}
+                dataPointsColor={Colors.COLOR_PRIMARY}
+              />
+            </Card>
+          ) : (
+            <Card style={styles.chartCard}>
+              <View style={styles.chartTitleContainer}>
+                <Text variant={'titleMedium'} style={styles.textCardTitle}>
+                  {selectedChart == 'BBUM' ? 'Berat Badan' : 'Tinggi Badan'}{' '}
+                  Menurut Umur{' '}
+                  {CHILD_DATA?.gender == 'male' ? 'Laki - laki' : 'Perempuan'}
+                </Text>
+              </View>
+              <BarChart
+                spacing={30}
+                width={screenWidth - 140}
+                frontColor={Colors.COLOR_PRIMARY}
+                height={320}
+                yAxisLabelTexts={[
+                  0, 20, 40, 80, 90, 100, 120, 140, 160, 180, 200,
+                ]}
+                data={selectedChart == 'BBUM' ? rekapHasilBBUM : rekapHasilTBUM}
+                color={Colors.COLOR_PRIMARY}
+                dataPointsColor={Colors.COLOR_PRIMARY}
+              />
+            </Card>
+          )}
         </View>
       </ScrollView>
     </View>

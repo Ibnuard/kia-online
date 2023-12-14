@@ -44,6 +44,7 @@ export const MainScreen = () => {
             routeName === 'KategoriNav' ||
             routeName === 'HistoryInit' ||
             routeName === 'ProfileInit' ||
+            routeName === 'CategoryInit' ||
             !routeName
           ) {
             return {display: 'flex'};

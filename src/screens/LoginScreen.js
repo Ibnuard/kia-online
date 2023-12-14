@@ -6,15 +6,22 @@ import {Colors, Scaler, Size} from '../styles';
 import {CustomButton, Gap} from '../components';
 import {FONT_SIZE_16} from '../styles/typography';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
-import {AuthContext, ModalContext} from '../context';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {AuthContext, ModalContext, RoleContext} from '../context';
 import {getDBdata, isDBPathExist} from '../utils/Database';
 import ModalView from '../components/modal';
 
 const LoginScreen = () => {
   const [phone, setPhone] = React.useState();
 
+  // Nav
   const navigation = useNavigation();
+  const route = useRoute();
+
+  // stat
+  const {role} = React.useContext(RoleContext);
+
+  console.log('role - > ' + role);
 
   const {signIn} = React.useContext(AuthContext);
   const {showModal, changeModal, hideModal, modalState} =
@@ -22,12 +29,13 @@ const LoginScreen = () => {
 
   const onLogin = async () => {
     showModal({type: 'loading'});
-    const isUserExist = await isDBPathExist(`Users/${phone}`);
+    const ROLE_PATH = role == 'user' ? 'Users' : 'Admins';
+    const isUserExist = await isDBPathExist(`${ROLE_PATH}/${phone}`);
 
     if (isUserExist) {
       hideModal();
       try {
-        const user = (await getDBdata(`Users/${phone}`)).data();
+        const user = (await getDBdata(`${ROLE_PATH}/${phone}`)).data();
         if (user) {
           signIn(user);
         }
@@ -59,13 +67,20 @@ const LoginScreen = () => {
             />
           </View>
 
-          <Text variant={'titleSmall'} style={styles.textLoginAdmin}>
-            Masuk sebagai admin
+          <Text
+            variant={'titleSmall'}
+            style={styles.textLoginAdmin}
+            onPress={() => navigation.navigate('Mode')}>
+            {role == 'user' ? 'Masuk sebagai admin' : 'Masuk sebagau pengguna'}
           </Text>
           <Icon name={'arrowright'} size={18} color={Colors.COLOR_PRIMARY} />
         </View>
         <View style={styles.bgContainer}>
-          <Image source={ASSETS.hero} style={styles.heroImg} />
+          <Image
+            source={ASSETS.hero[role][0]}
+            style={styles.heroImg}
+            resizeMode={'contain'}
+          />
         </View>
       </View>
       <View style={styles.inputContainer}>
@@ -86,6 +101,7 @@ const LoginScreen = () => {
           placeholderTextColor={Colors.COLOR_GREY}
           onChangeText={te => setPhone(te)}
           value={phone}
+          keyboardType={'phone-pad'}
         />
         <Gap height={20} />
         <CustomButton disabled={!phone} onPress={() => onLogin()}>
@@ -136,8 +152,8 @@ const styles = StyleSheet.create({
   heroImg: {
     alignSelf: 'center',
     height: '100%',
-    width: Scaler.scaleSize(220),
-    marginTop: 10,
+    width: Scaler.scaleSize(420),
+    marginTop: Scaler.scaleSize(8),
   },
 
   topLogo: {
@@ -145,16 +161,15 @@ const styles = StyleSheet.create({
   },
 
   topContent: {
-    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Size.SIZE_24,
+    paddingHorizontal: Size.SIZE_14,
     paddingVertical: Size.SIZE_8,
   },
 
   logo: {
-    height: 50,
-    width: 100,
+    height: 40,
+    width: 40,
   },
 
   bottomContainer: {

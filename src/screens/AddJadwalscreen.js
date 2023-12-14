@@ -9,65 +9,65 @@ import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {addToDB, usersCollection} from '../utils/Database';
+import {addToDB, imunisasiCollection, usersCollection} from '../utils/Database';
 import {AuthContext, ModalContext} from '../context';
 import ModalView from '../components/modal';
 
-const AddChildScreen = () => {
+const AddJadwalScreen = () => {
   // Nav
   const navigation = useNavigation();
   const route = useRoute();
 
-  const IS_UPDATE = route.params?.childId;
-  const CHILD_DATA = IS_UPDATE ? route.params?.childData : null;
+  // Stat
+  const {user} = React.useContext(AuthContext);
 
-  const DATE = new Date(Date.parse(moment(CHILD_DATA?.date).format()));
+  const IMUNISASI = route.params?.data;
 
-  console.log(DATE);
+  const IS_UPDATE = route?.params?.isUpdate;
 
-  const [name, setName] = React.useState(IS_UPDATE ? CHILD_DATA?.name : '');
-  const [sex, setSex] = React.useState(IS_UPDATE ? CHILD_DATA?.gender : 'male');
+  const DATE = new Date(Date.parse(moment(IMUNISASI?.jadwal).format()));
+
+  const [name, setName] = React.useState(IMUNISASI?.name);
+  const [alamat, setAlamat] = React.useState(
+    IS_UPDATE ? IMUNISASI?.alamat : user?.alamat,
+  );
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [date, setDate] = React.useState(IS_UPDATE ? DATE : new Date());
   const [modalOk, setModalOk] = React.useState(false);
   const [inputError, setInputError] = React.useState('');
-
-  // Stat
-  const {user} = React.useContext(AuthContext);
 
   // Modal
   const {showModal, hideModal, changeModal, modalState} =
     React.useContext(ModalContext);
 
   const onChildAdd = async () => {
-    if (name.length < 3) {
-      setInputError('Nama minimal teridir dari 3 huruf!');
+    if (alamat.length < 3) {
+      setInputError('Alamat tidak valid!');
       return;
     }
 
-    await showModal();
+    await showModal({type: 'loading'});
 
     if (IS_UPDATE) {
       try {
-        usersCollection
-          .doc(user?.phone)
-          .collection('childs')
-          .doc(IS_UPDATE)
+        imunisasiCollection
+          .doc(IMUNISASI.id)
           .update({
             name: name,
-            gender: sex,
-            date: String(date),
+            jadwal: moment(date).format(),
+            alamat: alamat,
+            formatedJadwal: moment(date).format('DD MMMM YYYY'),
           })
           .then(async () => {
             setModalOk(true);
             await changeModal({
               type: 'popup',
-              message: 'Biodata berhasil diubah!',
+              message: 'Jadwal berhasil diubah!',
             });
           });
-
         return;
       } catch (error) {
+        console.log(error);
         setModalOk(false);
         await changeModal({
           type: 'popup',
@@ -78,24 +78,20 @@ const AddChildScreen = () => {
       }
     }
 
+    const data = {
+      kode: IMUNISASI?.category,
+      name: name,
+      jadwal: moment(date).format(),
+      formatedJadwal: moment(date).format('DD MMMM YYYY'),
+      alamat: alamat,
+      createdDate: moment().format(),
+    };
+
     try {
-      usersCollection
-        .doc(user?.phone)
-        .collection('childs')
-        .add({
-          name: name,
-          gender: sex,
-          date: String(date),
-          createdDate: moment().format(),
-          alamat: user?.alamat,
-        })
-        .then(async () => {
-          setModalOk(true);
-          await changeModal({
-            type: 'popup',
-            message: 'Biodata berhasil ditambahkan!',
-          });
-        });
+      await imunisasiCollection.add(data).then(async () => {
+        setModalOk(true);
+        await changeModal({type: 'popup', message: 'Jadwal berhasil dibuat!'});
+      });
     } catch (error) {
       console.log(error);
       setModalOk(false);
@@ -109,14 +105,15 @@ const AddChildScreen = () => {
   return (
     <View style={styles.container}>
       <AppBar
-        title={IS_UPDATE ? 'Ubah Biodata' : 'Buat Biodata Baru'}
+        title={IS_UPDATE ? 'Ubah Jadwal Imunisasi' : 'Buat Jadwal Baru'}
         showBack={true}
       />
       <View style={styles.mainContainer}>
         <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Nama Lengkap
+          Nama Program Imunisasi
         </Text>
         <TextInput
+          editable={false}
           mode={'outlined'}
           placeholder="Masukan nama lengkap buah hati.."
           placeholderTextColor={Colors.COLOR_GREY}
@@ -126,35 +123,9 @@ const AddChildScreen = () => {
           onChangeText={te => setName(te)}
           value={name}
         />
-        {inputError.length > 0 ? (
-          <HelperText type={'error'}>Ini error</HelperText>
-        ) : null}
         <Gap height={24} />
         <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Jenis Kelamin
-        </Text>
-        <View style={styles.radioRow}>
-          <View style={styles.radioRow}>
-            <RadioButton
-              value="male"
-              status={sex === 'male' ? 'checked' : 'unchecked'}
-              onPress={() => setSex('male')}
-            />
-            <Text>Laki - laki</Text>
-          </View>
-          <Gap width={24} />
-          <View style={styles.radioRow}>
-            <RadioButton
-              value="female"
-              status={sex === 'female' ? 'checked' : 'unchecked'}
-              onPress={() => setSex('female')}
-            />
-            <Text>Prempuan</Text>
-          </View>
-        </View>
-        <Gap height={24} />
-        <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Tanggal Lahir
+          Tanggal Pelaksanaan
         </Text>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -168,12 +139,29 @@ const AddChildScreen = () => {
             right={<TextInput.Icon icon={'calendar-range'} />}
           />
         </TouchableOpacity>
+        <Gap height={24} />
+        <Text variant={'labelLarge'} style={styles.labelTitle}>
+          Lokasi Imunisasi
+        </Text>
+        <TextInput
+          mode={'outlined'}
+          placeholder="Masukan lokasi imunisasi..."
+          placeholderTextColor={Colors.COLOR_GREY}
+          onChange={() => {
+            setInputError('');
+          }}
+          onChangeText={te => setAlamat(te)}
+          value={alamat}
+        />
+        {inputError.length > 0 ? (
+          <HelperText type={'error'}>{inputError}</HelperText>
+        ) : null}
       </View>
       <View style={styles.bottomContainer}>
         <CustomButton
           disabled={!name || inputError.length > 0}
           onPress={() => onChildAdd()}>
-          {IS_UPDATE ? 'Simpan' : 'Tambahkan'}
+          {'Simpan'}
         </CustomButton>
       </View>
       <DatePicker
@@ -181,6 +169,7 @@ const AddChildScreen = () => {
         open={showDatePicker}
         mode={'date'}
         date={date}
+        minimumDate={new Date()}
         onConfirm={date => {
           setShowDatePicker(false);
           setDate(date);
@@ -194,19 +183,13 @@ const AddChildScreen = () => {
         visible={modalState.visible}
         message={modalState.message}
         onPress={() => hideModal()}
-        onModalHide={() =>
-          modalOk
-            ? IS_UPDATE
-              ? navigation.navigate('ChildList', {updated: true})
-              : navigation.goBack()
-            : null
-        }
+        onModalHide={() => (modalOk ? navigation.goBack() : null)}
       />
     </View>
   );
 };
 
-export default AddChildScreen;
+export default AddJadwalScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -215,6 +198,7 @@ const styles = StyleSheet.create({
   },
 
   mainContainer: {
+    flex: 1,
     padding: Size.SIZE_24,
   },
 
@@ -224,8 +208,6 @@ const styles = StyleSheet.create({
   },
 
   bottomContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
     padding: Size.SIZE_24,
   },
 

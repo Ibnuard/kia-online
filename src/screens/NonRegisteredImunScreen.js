@@ -9,9 +9,9 @@ import {
   imunisasiCollection,
 } from '../utils/Database';
 import {AuthContext} from '../context';
-import {mergeDataBySameId, selisihHari} from '../utils/utils';
+import {selisihHari} from '../utils/utils';
 
-const RegisteredImunScreen = () => {
+const NonRegisteredImunScreen = () => {
   const [jadwal, setJadwal] = React.useState();
 
   // STAT
@@ -25,37 +25,36 @@ const RegisteredImunScreen = () => {
 
   async function getJadwal() {
     try {
-      await imunisasiCollection.onSnapshot(async snap => {
-        let temp = [];
-        snap.forEach(async doc => {
-          const data = doc.data();
-          const deadline = selisihHari(data?.jadwal);
-          if (deadline >= 0) {
-            temp.push({...doc.data(), id: doc.id});
-          }
-        });
+      await imunisasiCollection
+        .orderBy('createdDate', 'desc')
+        .onSnapshot(async snap => {
+          let temp = [];
+          snap.forEach(async doc => {
+            const data = doc.data();
+            const deadline = selisihHari(data?.jadwal);
+            if (deadline >= 0) {
+              temp.push({...doc.data(), id: doc.id});
+            }
+          });
 
-        if (temp?.length) {
-          await getChildList(user?.phone, async childs => {
-            let newData = [];
-            for (let i = 0; i < temp.length; i++) {
-              for (let j = 0; j < childs.length; j++) {
-                const status = await checkImunisasiStatus(
-                  temp[i].id,
-                  childs[j].id,
-                );
-                if (status) {
-                  newData.push(temp[i]);
+          if (temp?.length) {
+            await getChildList(user?.phone, async childs => {
+              //let newData = [];
+              for (let i = 0; i < temp.length; i++) {
+                for (let j = 0; j < childs.length; j++) {
+                  const status = await checkImunisasiStatus(
+                    temp[i].id,
+                    childs[j].id,
+                  );
+                  if (status) {
+                    temp[i].registered = true;
+                  }
                 }
               }
-            }
-
-            const merged = mergeDataBySameId(newData);
-
-            setJadwal(merged);
-          });
-        }
-      });
+              setJadwal(temp);
+            });
+          }
+        });
     } catch (error) {
       console.log(error);
     }
@@ -71,11 +70,13 @@ const RegisteredImunScreen = () => {
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <Card.ImunisasiCard
-              isRegistered={true}
               data={item}
               onRegsiterPress={() =>
-                navigation.navigate('TiketList', {
-                  data: item,
+                navigation.navigate('DaftarImunisasi', {
+                  screen: 'DaftarInit',
+                  params: {
+                    data: item,
+                  },
                 })
               }
             />
@@ -88,7 +89,7 @@ const RegisteredImunScreen = () => {
   );
 };
 
-export default RegisteredImunScreen;
+export default NonRegisteredImunScreen;
 
 const styles = StyleSheet.create({
   container: {

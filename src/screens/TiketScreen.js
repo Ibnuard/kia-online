@@ -5,17 +5,29 @@ import {Colors, Scaler, Size} from '../styles';
 import {Card, Divider, Text} from 'react-native-paper';
 import {CustomButton, Gap} from '../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {hitungUmur} from '../utils/utils';
+import moment from 'moment';
 
 const TiketScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const IMUNISASI = route.params?.imunisasi;
+  const CHILD = route?.params?.child;
+  const ANTRIAN = route.params?.antrian;
+
+  const DATA = route?.params?.data;
+
+  console.log(DATA);
+
   return (
     <View style={styles.container}>
       <AppBar title="Tiket Imunisasi" style={styles.appBar} />
       <View style={styles.mainContainer}>
         <View style={styles.circle}>
           <Text style={styles.textNomor} variant={'displaySmall'}>
-            10
+            {ANTRIAN || DATA?.antrian}
           </Text>
         </View>
         <Gap height={14} />
@@ -26,7 +38,7 @@ const TiketScreen = () => {
           <View style={styles.topRow}>
             <Icon name={'calendar-range'} size={20} />
             <Text variant={'labelSmall'} style={styles.textDate}>
-              Senin, 11 Desember 2023
+              {moment(IMUNISASI?.jadwal).format('DD MMMM YYYY')}
             </Text>
           </View>
           <View style={styles.topRow}>
@@ -36,7 +48,7 @@ const TiketScreen = () => {
               color={Colors.COLOR_PRIMARY}
             />
             <Text variant={'labelSmall'} style={styles.textTicket}>
-              Antrean ke 10
+              Antrean ke {ANTRIAN || DATA?.antrian}
             </Text>
           </View>
         </View>
@@ -46,19 +58,52 @@ const TiketScreen = () => {
               Biodata Buah Hati
             </Text>
             <Gap height={14} />
-            <Divider />
+            <Divider bold />
             <Gap height={7} />
             <View style={styles.cardRow}>
               <Text variant={'bodyMedium'} style={styles.cardCaption}>
-                Caption
+                Nama lengkap
               </Text>
-              <Text style={styles.cardValue}>Raden joyo ningrat</Text>
+              <Text style={styles.cardValue}>{CHILD?.name || DATA?.name}</Text>
             </View>
             <View style={styles.cardRow}>
               <Text variant={'bodyMedium'} style={styles.cardCaption}>
-                Caption
+                Umur
               </Text>
-              <Text style={styles.cardValue}>Value</Text>
+              <Text style={styles.cardValue}>
+                {hitungUmur(CHILD?.date || DATA?.date)} tahun
+              </Text>
+            </View>
+          </Card.Content>
+        </Card>
+        <Gap height={14} />
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text variant={'titleLarge'} style={styles.cardTitle}>
+              Imunisasi
+            </Text>
+            <Gap height={14} />
+            <Divider bold />
+            <Gap height={7} />
+            <View style={styles.cardRow}>
+              <Text variant={'bodyMedium'} style={styles.cardCaption}>
+                Jenis program
+              </Text>
+              <Text style={styles.cardValue}>{IMUNISASI?.name}</Text>
+            </View>
+            <View style={styles.cardRow}>
+              <Text variant={'bodyMedium'} style={styles.cardCaption}>
+                Tanggal Imunisasi
+              </Text>
+              <Text style={styles.cardValue}>
+                {moment(IMUNISASI?.jadwal).format('DD MMMM YYYY')}
+              </Text>
+            </View>
+            <View style={styles.cardRow}>
+              <Text variant={'bodyMedium'} style={styles.cardCaption}>
+                Tempat
+              </Text>
+              <Text style={styles.cardValue}>{IMUNISASI?.alamat}</Text>
             </View>
           </Card.Content>
         </Card>

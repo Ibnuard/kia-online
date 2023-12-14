@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Hepatitis B",
+    "key": "A0"
+  },
+  {
+    "title": "BCG",
+    "key": "A1"
+  },
+  {
+    "title": "Polio",
+    "key": "A2"
+  },
+  {
+    "title": "DPT-hb-Hib",
+    "key": "A3"
+  },
+  {
+    "title": "Polio Suntik IPV",
+    "key": "A4"
+  },
+  {
+    "title": "Campak Rubella",
+    "key": "A5"
+  }
+]
