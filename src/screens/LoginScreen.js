@@ -8,8 +8,9 @@ import {FONT_SIZE_16} from '../styles/typography';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {AuthContext, ModalContext, RoleContext} from '../context';
-import {getDBdata, isDBPathExist} from '../utils/Database';
+import {getDBdata, isDBPathExist, updateDB} from '../utils/Database';
 import ModalView from '../components/modal';
+import {retrieveData} from '../utils/store';
 
 const LoginScreen = () => {
   const [phone, setPhone] = React.useState();
@@ -29,22 +30,34 @@ const LoginScreen = () => {
 
   const onLogin = async () => {
     showModal({type: 'loading'});
+
     const ROLE_PATH = role == 'user' ? 'Users' : 'Admins';
     const isUserExist = await isDBPathExist(`${ROLE_PATH}/${phone}`);
 
     if (isUserExist) {
+      const FCM_TOKEN = await retrieveData('FCM', false);
+
+      console.log('FCM -> ' + FCM_TOKEN);
+
       hideModal();
       try {
         const user = (await getDBdata(`${ROLE_PATH}/${phone}`)).data();
         if (user) {
-          signIn(user);
+          await updateDB(`${ROLE_PATH}/${phone}`, {
+            fcmToken: FCM_TOKEN,
+          });
+          signIn({...user, fcmToken: FCM_TOKEN});
         }
         console.log(user);
       } catch (error) {
         console.log(error);
       }
     } else {
-      changeModal({type: 'popup', message: 'User tidak ditemukan!'});
+      changeModal({
+        type: 'popup',
+        title: 'Login Gagal',
+        message: 'User tidak ditemukan!',
+      });
       console.log('Users not found');
     }
   };
@@ -123,6 +136,8 @@ const LoginScreen = () => {
         type={modalState.type}
         message={modalState.message}
         onPress={() => hideModal()}
+        title={modalState?.title}
+        status={modalState.status}
       />
     </View>
   );

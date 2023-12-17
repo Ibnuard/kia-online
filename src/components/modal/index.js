@@ -11,6 +11,8 @@ const ModalView = ({
   onPress,
   onModalHide,
   message,
+  status,
+  title,
 }) => {
   //render modal children
   const renderContent = () => {
@@ -19,7 +21,14 @@ const ModalView = ({
         return <ModalLoading />;
         break;
       case 'popup':
-        return <ModalPopUp message={message} onButtonPress={onPress} />;
+        return (
+          <ModalPopUp
+            status={status}
+            message={message}
+            onButtonPress={onPress}
+            title={title}
+          />
+        );
         break;
       default:
         return children;

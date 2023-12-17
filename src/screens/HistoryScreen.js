@@ -7,19 +7,22 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {Card, CustomButton, EmptyList} from '../components';
+import {Card, CustomButton, EmptyList, Gap} from '../components';
 import {Colors, Size} from '../styles';
 import AppBar from '../components/AppBar';
 import {useNavigation} from '@react-navigation/native';
 import {historyCollection, usersCollection} from '../utils/Database';
 import {AuthContext} from '../context';
+import {Searchbar} from 'react-native-paper';
 
 // render admin content
 function renderAdminContent() {
   const [selectedKey, setSelectedKey] = React.useState('A0');
   const [history, setHistory] = React.useState();
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const navigation = useNavigation();
+  const {user} = React.useContext(AuthContext);
 
   console.log(selectedKey);
 
@@ -32,7 +35,8 @@ function renderAdminContent() {
   async function getHistory() {
     try {
       await historyCollection
-        .where('imunisasi.kode', '==', selectedKey)
+        .where('kode', '==', selectedKey)
+        .where('adminId', '==', user?.phone)
         .onSnapshot(snap => {
           let temp = [];
           snap.forEach(doc => {
@@ -47,6 +51,16 @@ function renderAdminContent() {
       console.log(error);
     }
   }
+
+  const onChangeSearch = query => setSearchQuery(query);
+
+  const filteredHistory = (data = []) => {
+    const newData = data.filter((item, index) => {
+      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+
+    return newData;
+  };
 
   return (
     <View style={styles.container}>
@@ -83,15 +97,23 @@ function renderAdminContent() {
             );
           })}
         </ScrollView>
-        {history?.length ? (
+        <Searchbar
+          placeholder="Cari"
+          style={styles.searchBar}
+          onChangeText={onChangeSearch}
+          value={searchQuery}
+        />
+        {filteredHistory(history)?.length ? (
           <FlatList
-            data={history}
+            data={filteredHistory(history)}
             renderItem={({item, index}) => (
-              <Card.AdminAntrianCard
+              <Card.AdminImunisasiCard
                 isHistory
                 data={item}
                 onPress={() =>
-                  navigation.navigate('HistoryDetail', {data: item})
+                  navigation.navigate('HistoryAntrian', {
+                    data: {...item, isHistory: true},
+                  })
                 }
               />
             )}
@@ -107,12 +129,25 @@ function renderAdminContent() {
 // render admin content
 function renderUserContent(user) {
   const [history, setHistory] = React.useState();
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const navigation = useNavigation();
 
   React.useEffect(() => {
     getHistory();
   }, []);
+
+  const onChangeSearch = query => setSearchQuery(query);
+
+  const filteredHistory = (data = []) => {
+    const newData = data.filter((item, index) => {
+      return item?.child?.name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+    });
+
+    return newData;
+  };
 
   async function getHistory() {
     try {
@@ -140,11 +175,18 @@ function renderUserContent(user) {
         style={styles.appBar}
       />
       <View style={styles.mainContainer}>
-        {history?.length ? (
+        <Searchbar
+          placeholder="Cari"
+          style={styles.searchBar}
+          onChangeText={onChangeSearch}
+          value={searchQuery}
+        />
+        <Gap height={14} />
+        {filteredHistory(history)?.length ? (
           <FlatList
-            data={history}
+            data={filteredHistory(history)}
             renderItem={({item, index}) =>
-              history?.length > 1 ? (
+              filteredHistory(history)?.length > 1 ? (
                 <View style={styles.historyRow}>
                   <View style={styles.traillContainer}>
                     <View style={styles.circle} />
@@ -229,6 +271,11 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderColor: Colors.COLOR_PRIMARY,
     borderStyle: 'dashed',
+  },
+
+  searchBar: {
+    marginVertical: 4,
+    backgroundColor: Colors.COLOR_WHITE,
   },
 
   // ADMIN

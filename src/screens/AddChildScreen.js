@@ -62,6 +62,7 @@ const AddChildScreen = () => {
             setModalOk(true);
             await changeModal({
               type: 'popup',
+              status: 'OK',
               message: 'Biodata berhasil diubah!',
             });
           });
@@ -71,6 +72,7 @@ const AddChildScreen = () => {
         setModalOk(false);
         await changeModal({
           type: 'popup',
+          status: 'ERROR',
           message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
         });
 
@@ -93,6 +95,7 @@ const AddChildScreen = () => {
           setModalOk(true);
           await changeModal({
             type: 'popup',
+            status: 'OK',
             message: 'Biodata berhasil ditambahkan!',
           });
         });
@@ -101,6 +104,7 @@ const AddChildScreen = () => {
       setModalOk(false);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
     }
@@ -181,6 +185,7 @@ const AddChildScreen = () => {
         open={showDatePicker}
         mode={'date'}
         date={date}
+        maximumDate={new Date()}
         onConfirm={date => {
           setShowDatePicker(false);
           setDate(date);
@@ -194,6 +199,7 @@ const AddChildScreen = () => {
         visible={modalState.visible}
         message={modalState.message}
         onPress={() => hideModal()}
+        status={modalState?.status}
         onModalHide={() =>
           modalOk
             ? IS_UPDATE

@@ -16,7 +16,11 @@ const AdminAntrianCard = props => {
 
   return (
     <Card
-      style={{backgroundColor: Colors.COLOR_WHITE, marginVertical: 8}}
+      style={{
+        backgroundColor: Colors.COLOR_WHITE,
+        marginVertical: 8,
+        marginHorizontal: 4,
+      }}
       {...props}>
       <Card.Content>
         <View style={styles.topRow}>

@@ -35,25 +35,27 @@ const NonRegisteredImunScreen = () => {
             if (deadline >= 0) {
               temp.push({...doc.data(), id: doc.id});
             }
+
+            setJadwal(temp);
           });
 
-          if (temp?.length) {
-            await getChildList(user?.phone, async childs => {
-              //let newData = [];
-              for (let i = 0; i < temp.length; i++) {
-                for (let j = 0; j < childs.length; j++) {
-                  const status = await checkImunisasiStatus(
-                    temp[i].id,
-                    childs[j].id,
-                  );
-                  if (status) {
-                    temp[i].registered = true;
-                  }
-                }
-              }
-              setJadwal(temp);
-            });
-          }
+          // if (temp?.length) {
+          //   await getChildList(user?.phone, async childs => {
+          //     //let newData = [];
+          //     for (let i = 0; i < temp.length; i++) {
+          //       for (let j = 0; j < childs.length; j++) {
+          //         const status = await checkImunisasiStatus(
+          //           temp[i].id,
+          //           childs[j].id,
+          //         );
+          //         if (status) {
+          //           temp[i].registered = true;
+          //         }
+          //       }
+          //     }
+          //     setJadwal(temp);
+          //   });
+          // }
         });
     } catch (error) {
       console.log(error);
@@ -71,6 +73,7 @@ const NonRegisteredImunScreen = () => {
           renderItem={({item, index}) => (
             <Card.ImunisasiCard
               data={item}
+              user={user}
               onRegsiterPress={() =>
                 navigation.navigate('DaftarImunisasi', {
                   screen: 'DaftarInit',

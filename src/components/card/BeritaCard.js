@@ -1,4 +1,10 @@
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {Text} from 'react-native-paper';
 import {Colors, Scaler, Size} from '../../styles';
@@ -7,13 +13,16 @@ import moment from 'moment';
 
 const {width} = Dimensions.get('window');
 
-const BeritaCard = ({data}) => {
+const BeritaCard = ({data, onPress}) => {
   const {author, title, isoDate, image} = data;
 
   const formattedDate = moment(isoDate).format('DD MMMM YYYY');
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.container}
+      onPress={onPress}>
       <FastImage
         style={styles.cardThumb}
         source={{
@@ -32,7 +41,7 @@ const BeritaCard = ({data}) => {
         </Text>
         <Text variant={'labelMedium'}>{author}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

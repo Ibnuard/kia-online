@@ -15,27 +15,29 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const MENUS = [
-    {
-      icon: 'emoticon-happy-outline',
-      title: 'Biodata Anak',
-      to: () => navigation.navigate('ChildList'),
-    },
+    user.role == 'user'
+      ? {
+          icon: 'emoticon-happy-outline',
+          title: 'Biodata Anak',
+          to: () => navigation.navigate('ChildList'),
+        }
+      : undefined,
     {
       icon: 'information-outline',
       title: 'Informasi dan Bantuan',
-      to: null,
+      to: () => navigation.navigate('Help'),
     },
     {
       icon: 'phone-outline',
       title: 'Nomor Gawat Darurat Nasional',
-      to: null,
+      to: () => navigation.navigate('CallCenter'),
     },
     {
       icon: 'exit-to-app',
       title: 'Keluar',
       to: () => signOut(),
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <View style={styles.container}>

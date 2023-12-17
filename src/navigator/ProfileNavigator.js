@@ -3,6 +3,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import RegisterProfileScreen from '../screens/RegisterProfileScreen';
 import DaftarImunisasiScreen from '../screens/DaftarImunisasiScreen';
 import AddChildScreen from '../screens/AddChildScreen';
+import CallScreen from '../screens/CallScreen';
+import HelpScreen from '../screens/HelpScreen';
 
 //create stack screen
 const Stack = createNativeStackNavigator();
@@ -23,6 +25,8 @@ export const ProfileStack = () => {
           animation: 'slide_from_right',
         }}
       />
+      <Stack.Screen name="CallCenter" component={CallScreen} />
+      <Stack.Screen name="Help" component={HelpScreen} />
     </Stack.Navigator>
   );
 };

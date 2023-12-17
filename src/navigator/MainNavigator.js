@@ -37,6 +37,7 @@ export const MainScreen = () => {
             </View>
           );
         },
+        tabBarHideOnKeyboard: true,
         tabBarStyle: (route => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? '';
           if (

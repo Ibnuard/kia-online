@@ -1,4 +1,12 @@
-import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  PermissionsAndroid,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React from 'react';
 import {Colors, Scaler, Size} from '../styles';
 import {ActivityIndicator, Card, Text} from 'react-native-paper';
@@ -11,6 +19,8 @@ import {MyTabBar} from '../components/TabBar';
 import {imunisasiCollection, usersCollection} from '../utils/Database';
 import {selisihHari} from '../utils/utils';
 import ModalView from '../components/modal';
+
+const {width} = Dimensions.get('window');
 
 const HomeScreen = () => {
   const [news, setNews] = React.useState([]);
@@ -29,7 +39,25 @@ const HomeScreen = () => {
   // TopBar
   const Tab = createMaterialTopTabNavigator();
 
-  console.log(user);
+  React.useEffect(() => {
+    requestCameraPermission();
+  }, []);
+
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   React.useEffect(() => {
     if (user?.role == 'user') {
@@ -68,21 +96,24 @@ const HomeScreen = () => {
   // recent
   async function getRecent() {
     try {
-      await usersCollection
-        .doc(user?.phone)
-        .collection('recent')
-        .onSnapshot(snap => {
-          let temp = [];
-          snap.forEach(doc => {
-            const data = doc.data();
-            const deadline = selisihHari(data?.jadwal);
-            if (deadline > 0) {
-              temp.push({...doc.data(), id: doc.id});
-            }
-          });
+      await imunisasiCollection.onSnapshot(async snap => {
+        let temp = [];
+        snap.forEach(async doc => {
+          const data = doc.data();
+          const deadline = selisihHari(data?.jadwal);
+          const parents = data?.parents;
 
-          setRecentImunisasi(temp[0]);
+          const isRegistered = parents?.includes(user?.phone);
+
+          if (deadline >= 0 && isRegistered) {
+            temp.push({...doc.data(), id: doc.id});
+          }
         });
+
+        if (temp?.length) {
+          setRecentImunisasi(temp.slice(0, 2));
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -95,12 +126,14 @@ const HomeScreen = () => {
       .onSnapshot(snap => {
         let temp = [];
         let tempdone = [];
-        snap.forEach(doc => {
+        snap?.forEach(doc => {
           const data = doc.data();
 
           if (selisihHari(data?.jadwal) >= 0) {
+            if (data.adminId !== user?.phone) return;
             temp.push({...doc.data(), id: doc.id});
           } else {
+            if (data.adminId !== user?.phone) return;
             tempdone.push({...doc.data(), id: doc.id});
           }
         });
@@ -120,6 +153,7 @@ const HomeScreen = () => {
         .then(async () => {
           await changeModal({
             type: 'popup',
+            status: 'OK',
             message: 'Berhasil menghapus jadwal!',
           });
         });
@@ -127,6 +161,7 @@ const HomeScreen = () => {
       console.log(error);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
     }
@@ -149,7 +184,7 @@ const HomeScreen = () => {
           Jadwal Imunisasi Anak
         </Text>
 
-        {!recentImunisasi ? (
+        {!recentImunisasi?.length ? (
           <Card mode={'contained'} style={styles.cardNoJadwal}>
             <Card.Content>
               <Text style={styles.textCardNoJadwal} variant={'labelMedium'}>
@@ -158,17 +193,33 @@ const HomeScreen = () => {
             </Card.Content>
           </Card>
         ) : (
-          <CustomCard.RecentJadwalCard
-            data={recentImunisasi}
-            onPress={() =>
-              navigation.jumpTo('Imunisasi', {
-                screen: 'KategoriNav',
-                params: {
-                  screen: 'Terdaftar',
-                },
-              })
-            }
-          />
+          <ScrollView
+            style={{flexGrow: 0}}
+            showsHorizontalScrollIndicator={false}
+            horizontal>
+            {recentImunisasi.map((item, index) => {
+              return (
+                <View
+                  key={item + index}
+                  style={{
+                    marginRight: Size.SIZE_14,
+                    width: width - Scaler.scaleSize(50),
+                  }}>
+                  <CustomCard.RecentJadwalCard
+                    data={item}
+                    onPress={() =>
+                      navigation.jumpTo('Imunisasi', {
+                        screen: 'KategoriNav',
+                        params: {
+                          screen: 'Terdaftar',
+                        },
+                      })
+                    }
+                  />
+                </View>
+              );
+            })}
+          </ScrollView>
         )}
 
         <Text style={styles.textTitle} variant={'titleMedium'}>
@@ -184,7 +235,14 @@ const HomeScreen = () => {
           <View style={styles.promoButtonContainer}>
             <CustomButton
               style={styles.promoButton}
-              labelStyle={styles.promoButtonLabel}>
+              labelStyle={styles.promoButtonLabel}
+              onPress={() =>
+                navigation.navigate('HomeNews', {
+                  data: {
+                    link: 'https://www.alodokter.com/mengapa-memilih-menyusui',
+                  },
+                })
+              }>
               Baca sekarang
             </CustomButton>
           </View>
@@ -196,7 +254,13 @@ const HomeScreen = () => {
         <View style={styles.newsContainer}>
           {news && news.length ? (
             news.map((item, index) => {
-              return <CustomCard.BeritaCard key={item + index} data={item} />;
+              return (
+                <CustomCard.BeritaCard
+                  onPress={() => navigation.navigate('HomeNews', {data: item})}
+                  key={item + index}
+                  data={item}
+                />
+              );
             })
           ) : (
             <View style={styles.newsLoading}>
@@ -219,12 +283,13 @@ const HomeScreen = () => {
             renderItem={({item, index}) => (
               <CustomCard.AdminImunisasiCard
                 data={item}
-                onPosPress={id => navigation.navigate('Jadwal', {data: item})}
+                onPosPress={id =>
+                  navigation.navigate('Jadwal', {data: item, isUpdate: true})
+                }
                 onNegPress={() => onDeleteJadwal(item.id)}
                 onPress={() =>
-                  navigation.navigate('AdminAntrian', {
+                  navigation.navigate('JadwalDetail', {
                     data: item,
-                    isUpdate: true,
                   })
                 }
               />
@@ -250,6 +315,7 @@ const HomeScreen = () => {
           visible={modalState.visible}
           type={modalState.type}
           message={modalState.message}
+          status={modalState?.status}
           onPress={() => hideModal()}
         />
         <Tab.Navigator tabBar={props => <MyTabBar key={props} {...props} />}>
@@ -280,7 +346,14 @@ const HomeScreen = () => {
           <FlatList
             data={jadwalDone}
             renderItem={({item, index}) => (
-              <CustomCard.AdminImunisasiCard data={item} />
+              <CustomCard.AdminImunisasiCard
+                data={item}
+                onPress={() =>
+                  navigation.navigate('AdminAntrian', {
+                    data: {id: item.id, isHistory: true},
+                  })
+                }
+              />
             )}
           />
         ) : (

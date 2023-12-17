@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import AppBar from '../components/AppBar';
 import {Colors, Scaler, Size} from '../styles';
@@ -22,7 +22,7 @@ const TiketScreen = () => {
   console.log(DATA);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <AppBar title="Tiket Imunisasi" style={styles.appBar} />
       <View style={styles.mainContainer}>
         <View style={styles.circle}>
@@ -103,7 +103,7 @@ const TiketScreen = () => {
               <Text variant={'bodyMedium'} style={styles.cardCaption}>
                 Tempat
               </Text>
-              <Text style={styles.cardValue}>{IMUNISASI?.alamat}</Text>
+              <Text style={styles.cardValue}>{IMUNISASI?.posyandu}</Text>
             </View>
           </Card.Content>
         </Card>
@@ -111,7 +111,7 @@ const TiketScreen = () => {
       <View style={styles.bottomContainer}>
         <CustomButton onPress={() => navigation.goBack()}>Kembali</CustomButton>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,0 +1,19 @@
+[
+  {
+    "type": "Panggilan Darurat",
+    "number": "112"
+  },
+  {
+    "type": "Ambulans",
+    "number": "119 (Khusus DKI: 021-65303118)",
+    "value": "119"
+  },
+  {
+    "type": "Sentra Informasi Keracunan BPOM",
+    "number": "1500-533"
+  },
+  {
+    "type": "Palang Merah Indonesia (PMI)",
+    "number": "021-7992325"
+  }
+]

@@ -1,6 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 
 export const usersCollection = firestore().collection('Users');
+export const adminsCollection = firestore().collection('Admins');
 export const imunisasiCollection = firestore().collection('Imunisasi');
 export const historyCollection = firestore().collection('History');
 
@@ -98,5 +99,21 @@ export const imunisasiDone = async (imunisasiId, userId) => {
     }
   } catch (error) {
     throw error;
+  }
+};
+
+export const getAdminsFCM = async cb => {
+  try {
+    await adminsCollection.onSnapshot(snap => {
+      let temp = [];
+      snap.forEach(doc => {
+        const data = doc.data();
+        temp.push(data?.fcmToken || '');
+      });
+
+      cb(temp);
+    });
+  } catch (error) {
+    console.log(error);
   }
 };

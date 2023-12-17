@@ -15,6 +15,9 @@ const ImunisasiCard = props => {
 
   const DEADLINE = selisihHari(DATA?.jadwal);
 
+  const parentList = DATA?.parents;
+  const isRegistered = parentList?.includes(USER?.phone);
+
   return (
     <Card
       style={{backgroundColor: Colors.COLOR_WHITE, marginVertical: 8}}
@@ -44,15 +47,11 @@ const ImunisasiCard = props => {
           ) : (
             <>
               <Chip
-                style={
-                  DATA?.registered ? styles.chipActive : styles.chipDisable
-                }
+                style={isRegistered ? styles.chipActive : styles.chipDisable}
                 textStyle={
-                  DATA?.registered
-                    ? styles.chipActiveText
-                    : styles.chipDisableText
+                  isRegistered ? styles.chipActiveText : styles.chipDisableText
                 }>
-                {DATA?.registered
+                {isRegistered
                   ? 'Anak anda telah terdaftar di sesi ini'
                   : 'Anak anda belum terdaftar di sesi ini'}
               </Chip>
@@ -95,7 +94,7 @@ const ImunisasiCard = props => {
                 style={styles.textTitle}
                 variant={'titleSmall'}
                 numberOfLines={1}>
-                {DATA?.alamat || DATA?.imunisasi?.alamat}
+                {DATA?.posyandu || DATA?.imunisasi?.posyandu}
               </Text>
             </View>
           </View>

@@ -15,7 +15,7 @@ import {BarChart, LineChart} from 'react-native-gifted-charts';
 import {FONT_SIZE_16} from '../styles/typography';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import moment from 'moment';
-import {hitungUmur} from '../utils/utils';
+import {hitungUmur, sendNotification} from '../utils/utils';
 import {
   historyCollection,
   imunisasiCollection,
@@ -49,6 +49,8 @@ const ImunisasiScreen = () => {
 
   const DATA_USER = route.params?.user;
   const DATA_IMUNISASI = route.params?.imunisasi;
+
+  const GENDER = DATA_USER?.gender == 'male' ? 'Laki - laki' : 'Perempuan';
 
   const CHART_HASIL = {
     BBTB: [
@@ -108,22 +110,33 @@ const ImunisasiScreen = () => {
           catatan: note,
         });
 
-      await historyCollection.add({
-        imunisasi: DATA_IMUNISASI,
-        child: {
-          ...DATA_USER,
-          hasilImunisasi: {
-            tb: tb,
-            bb: bb,
-            bbtb: bbtb,
-            bbum: bbum,
-            tbum: tbum,
-            catatan: note,
+      const isExistOnHistory = (
+        await historyCollection.doc(DATA_IMUNISASI?.id).get()
+      ).exists;
+
+      if (!isExistOnHistory) {
+        await historyCollection.doc(DATA_IMUNISASI?.id).set(DATA_IMUNISASI);
+      }
+
+      await historyCollection
+        .doc(DATA_IMUNISASI?.id)
+        .collection('Registered')
+        .add({
+          imunisasi: DATA_IMUNISASI,
+          child: {
+            ...DATA_USER,
+            hasilImunisasi: {
+              tb: tb,
+              bb: bb,
+              bbtb: bbtb,
+              bbum: bbum,
+              tbum: tbum,
+              catatan: note,
+            },
+            imunisasiStatus: 'DONE',
+            imunisasiTanggal: moment().format(),
           },
-          imunisasiStatus: 'DONE',
-          imunisasiTanggal: moment().format(),
-        },
-      });
+        });
 
       await imunisasiCollection
         .doc(DATA_IMUNISASI?.id)
@@ -145,14 +158,23 @@ const ImunisasiScreen = () => {
           setModalOk(true);
           await changeModal({
             type: 'popup',
+            status: 'OK',
             message: 'Data imunisasi berhasil disimpan!',
           });
         });
+
+      await sendNotification(
+        [DATA_USER?.fcmToken],
+        `Sdr. ${
+          DATA_USER?.name
+        } telah dilakukan imunisasi pada ${moment().format('DD MMMM YYYY')}`,
+      );
     } catch (error) {
       console.log(error);
       setModalOk(false);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
     }
@@ -249,7 +271,7 @@ const ImunisasiScreen = () => {
         />
         <Gap height={20} />
         <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Kondisi BB Menurut TB Anak Perempuan
+          Kondisi BB Menurut TB {GENDER}
         </Text>
         <List.Accordion
           style={styles.expandContainer}
@@ -273,7 +295,7 @@ const ImunisasiScreen = () => {
         </List.Accordion>
         <Gap height={20} />
         <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Kondisi BB Menurut Umur Anak Perempuan
+          Kondisi BB Menurut Umur {GENDER}
         </Text>
         <List.Accordion
           style={styles.expandContainer}
@@ -297,7 +319,7 @@ const ImunisasiScreen = () => {
         </List.Accordion>
         <Gap height={20} />
         <Text variant={'labelLarge'} style={styles.labelTitle}>
-          Kondisi BB Menurut Umur Anak Perempuan
+          Kondisi BB Menurut Umur {GENDER}
         </Text>
         <List.Accordion
           style={styles.expandContainer}
@@ -345,6 +367,7 @@ const ImunisasiScreen = () => {
         type={modalState.type}
         message={modalState.message}
         onPress={() => hideModal()}
+        status={modalState?.status}
         onModalHide={() => {
           modalOk ? navigation.goBack() : null;
         }}

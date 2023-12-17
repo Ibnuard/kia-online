@@ -1,4 +1,10 @@
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import AppBar from '../components/AppBar';
 import {HelperText, RadioButton, Text, TextInput} from 'react-native-paper';
@@ -28,6 +34,7 @@ const AddJadwalScreen = () => {
   const DATE = new Date(Date.parse(moment(IMUNISASI?.jadwal).format()));
 
   const [name, setName] = React.useState(IMUNISASI?.name);
+  const [posyandu, setPosyandu] = React.useState(user?.posyandu);
   const [alamat, setAlamat] = React.useState(
     IS_UPDATE ? IMUNISASI?.alamat : user?.alamat,
   );
@@ -55,6 +62,7 @@ const AddJadwalScreen = () => {
           .update({
             name: name,
             jadwal: moment(date).format(),
+            posyandu: posyandu,
             alamat: alamat,
             formatedJadwal: moment(date).format('DD MMMM YYYY'),
           })
@@ -62,6 +70,7 @@ const AddJadwalScreen = () => {
             setModalOk(true);
             await changeModal({
               type: 'popup',
+              status: 'OK',
               message: 'Jadwal berhasil diubah!',
             });
           });
@@ -71,6 +80,7 @@ const AddJadwalScreen = () => {
         setModalOk(false);
         await changeModal({
           type: 'popup',
+          status: 'ERROR',
           message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
         });
 
@@ -81,22 +91,29 @@ const AddJadwalScreen = () => {
     const data = {
       kode: IMUNISASI?.category,
       name: name,
+      posyandu: posyandu,
       jadwal: moment(date).format(),
       formatedJadwal: moment(date).format('DD MMMM YYYY'),
       alamat: alamat,
+      adminId: user?.phone,
       createdDate: moment().format(),
     };
 
     try {
       await imunisasiCollection.add(data).then(async () => {
         setModalOk(true);
-        await changeModal({type: 'popup', message: 'Jadwal berhasil dibuat!'});
+        await changeModal({
+          type: 'popup',
+          status: 'OK',
+          message: 'Jadwal berhasil dibuat!',
+        });
       });
     } catch (error) {
       console.log(error);
       setModalOk(false);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
     }
@@ -108,12 +125,15 @@ const AddJadwalScreen = () => {
         title={IS_UPDATE ? 'Ubah Jadwal Imunisasi' : 'Buat Jadwal Baru'}
         showBack={true}
       />
-      <View style={styles.mainContainer}>
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        style={styles.mainContainer}>
         <Text variant={'labelLarge'} style={styles.labelTitle}>
           Nama Program Imunisasi
         </Text>
         <TextInput
           editable={false}
+          disabled
           mode={'outlined'}
           placeholder="Masukan nama lengkap buah hati.."
           placeholderTextColor={Colors.COLOR_GREY}
@@ -141,10 +161,31 @@ const AddJadwalScreen = () => {
         </TouchableOpacity>
         <Gap height={24} />
         <Text variant={'labelLarge'} style={styles.labelTitle}>
+          Nama Posyandu
+        </Text>
+        <TextInput
+          mode={'outlined'}
+          editable={false}
+          disabled
+          placeholder="Masukan lokasi imunisasi..."
+          placeholderTextColor={Colors.COLOR_GREY}
+          onChange={() => {
+            setInputError('');
+          }}
+          onChangeText={te => setPosyandu(te)}
+          value={posyandu}
+        />
+        {inputError.length > 0 ? (
+          <HelperText type={'error'}>{inputError}</HelperText>
+        ) : null}
+        <Gap height={24} />
+        <Text variant={'labelLarge'} style={styles.labelTitle}>
           Lokasi Imunisasi
         </Text>
         <TextInput
           mode={'outlined'}
+          editable={false}
+          disabled
           placeholder="Masukan lokasi imunisasi..."
           placeholderTextColor={Colors.COLOR_GREY}
           onChange={() => {
@@ -153,17 +194,17 @@ const AddJadwalScreen = () => {
           onChangeText={te => setAlamat(te)}
           value={alamat}
         />
-        {inputError.length > 0 ? (
-          <HelperText type={'error'}>{inputError}</HelperText>
-        ) : null}
-      </View>
-      <View style={styles.bottomContainer}>
-        <CustomButton
-          disabled={!name || inputError.length > 0}
-          onPress={() => onChildAdd()}>
-          {'Simpan'}
-        </CustomButton>
-      </View>
+        {
+          <View style={styles.bottomContainer}>
+            <CustomButton
+              disabled={!name || inputError.length > 0}
+              onPress={() => onChildAdd()}>
+              {'Simpan'}
+            </CustomButton>
+          </View>
+        }
+      </ScrollView>
+
       <DatePicker
         modal
         open={showDatePicker}
@@ -183,6 +224,7 @@ const AddJadwalScreen = () => {
         visible={modalState.visible}
         message={modalState.message}
         onPress={() => hideModal()}
+        status={modalState?.status}
         onModalHide={() => (modalOk ? navigation.goBack() : null)}
       />
     </View>
@@ -208,7 +250,8 @@ const styles = StyleSheet.create({
   },
 
   bottomContainer: {
-    padding: Size.SIZE_24,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
 
   // text

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SplashStack} from './navigator';
 import {AuthContext} from './context';
-import {retrieveData} from './utils/store';
+import {removeData, retrieveData, storeData} from './utils/store';
 import {AuthStackScreen} from './navigator/AuthNavigator';
 import {MainScreen} from './navigator/MainNavigator';
 import {StatusBar} from 'react-native';
@@ -78,9 +78,14 @@ const App = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token', user: data});
+        await storeData('USER_SESSION', {...data, userToken: 'abcdefgh'}, true);
+
+        dispatch({type: 'SIGN_IN', token: 'abcdefgh', user: data});
       },
-      signOut: () => dispatch({type: 'SIGN_OUT'}),
+      signOut: async () => {
+        await removeData('USER_SESSION');
+        dispatch({type: 'SIGN_OUT'});
+      },
       signUp: async data => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
@@ -95,7 +100,7 @@ const App = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({type: 'RESTORE_TOKEN', token: data});
+        dispatch({type: 'RESTORE_TOKEN', token: data?.userToken, user: data});
       },
       user: state.user,
     }),
@@ -110,15 +115,15 @@ const App = () => {
       />
       <ModalProvider>
         <AuthContext.Provider value={authContext}>
-          {state.isLoading ? (
-            <SplashStack />
-          ) : state.userToken == null ? (
-            <RoleProvider>
+          <RoleProvider>
+            {state.isLoading ? (
+              <SplashStack />
+            ) : state.userToken == null ? (
               <AuthStackScreen />
-            </RoleProvider>
-          ) : (
-            <MainScreen />
-          )}
+            ) : (
+              <MainScreen />
+            )}
+          </RoleProvider>
         </AuthContext.Provider>
       </ModalProvider>
     </NavigationContainer>

@@ -10,6 +10,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {
+  getAdminsFCM,
   getDBdata,
   imunisasiCollection,
   usersCollection,
@@ -17,12 +18,14 @@ import {
 import {AuthContext, ModalContext} from '../context';
 import ModalView from '../components/modal';
 import moment from 'moment';
+import {sendNotification} from '../utils/utils';
 
 const DaftarImunisasiScreen = () => {
   const [childList, setChildList] = React.useState();
   const [modalOk, setModalOk] = React.useState(false);
   const [antrian, setAntrian] = React.useState();
   const [selectedChild, setSelectedChild] = React.useState();
+  const [fcmTokens, setFcmTokens] = React.useState();
 
   // Nav
   const navigation = useNavigation();
@@ -40,18 +43,54 @@ const DaftarImunisasiScreen = () => {
   const {showModal, hideModal, changeModal, modalState} =
     React.useContext(ModalContext);
 
+  React.useEffect(() => {
+    adminsFCM();
+  }, []);
+
   // Funcrional
+  async function adminsFCM() {
+    try {
+      await getAdminsFCM(cb => {
+        const cleanData = cb.filter((item, index) => {
+          return item.length;
+        });
+
+        setFcmTokens(cleanData);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function onGetTicket(item) {
     setSelectedChild(item);
     await showModal({type: 'loading'});
     try {
+      const isAlreadyRegistered = (
+        await imunisasiCollection
+          .doc(DATA_IMUNISASI?.id)
+          .collection('Registered')
+          .doc(item.id)
+          .get()
+      ).exists;
+
+      if (isAlreadyRegistered) {
+        await changeModal({
+          type: 'popup',
+          message: 'Biodata ini telah terdaftar untuk jadwal imunisasi ini!',
+          status: 'WARN',
+        });
+
+        return;
+      }
+
       const getAntrian = await imunisasiCollection
         .doc(DATA_IMUNISASI?.id)
         .collection('Registered')
         .count()
         .get();
 
-      const sAntrian = getAntrian.data().count + 1;
+      const sAntrian = (await getAntrian.data().count) + 1;
 
       setAntrian(sAntrian);
 
@@ -63,6 +102,34 @@ const DaftarImunisasiScreen = () => {
           createdDate: moment().format(),
         });
 
+      // GET EXISTING PARENT REGISTERED
+      const checkParent = await imunisasiCollection
+        .doc(DATA_IMUNISASI?.id)
+        .get();
+
+      const isParentRegistered = checkParent.data().parents || [];
+
+      if (isParentRegistered.length > 0) {
+        const isContain = isParentRegistered.includes(user?.phone);
+
+        if (!isContain) {
+          imunisasiCollection.doc(DATA_IMUNISASI?.id).update({
+            parents: [...isParentRegistered, user?.phone],
+          });
+        }
+      } else {
+        imunisasiCollection.doc(DATA_IMUNISASI?.id).update({
+          parents: [...isParentRegistered, user?.phone],
+        });
+      }
+
+      if (fcmTokens) {
+        await sendNotification(
+          fcmTokens,
+          `${item.name} telah mendaftar untuk imunisasi ${DATA_IMUNISASI?.name}`,
+        );
+      }
+
       imunisasiCollection
         .doc(DATA_IMUNISASI.id)
         .collection('Registered')
@@ -72,11 +139,13 @@ const DaftarImunisasiScreen = () => {
           parentId: user?.phone,
           createdDate: moment().format(),
           antrian: sAntrian,
+          fcmToken: user?.fcmToken,
         })
         .then(async () => {
           setModalOk(true);
           await changeModal({
             type: 'popup',
+            status: 'OK',
             message: 'Anda telah berhasil mendaftar!',
           });
         });
@@ -84,6 +153,7 @@ const DaftarImunisasiScreen = () => {
       setModalOk(false);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
       console.log(error);
@@ -127,6 +197,7 @@ const DaftarImunisasiScreen = () => {
           setModalOk(true);
           await changeModal({
             type: 'popup',
+            status: 'OK',
             message: 'Biodata berhasil di hapus!',
           });
         });
@@ -134,6 +205,7 @@ const DaftarImunisasiScreen = () => {
       setModalOk(false);
       await changeModal({
         type: 'popup',
+        status: 'ERROR',
         message: 'Ada sesuatu yang tidak beres, silahkan coba lagi!',
       });
     }
@@ -199,6 +271,7 @@ const DaftarImunisasiScreen = () => {
         type={modalState.type}
         visible={modalState.visible}
         message={modalState.message}
+        status={modalState?.status}
         onPress={() => hideModal()}
         onModalHide={() =>
           modalOk && !IS_UPDATED && !IS_CHILD_LIST

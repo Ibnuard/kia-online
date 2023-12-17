@@ -30,36 +30,25 @@ const RegisteredImunScreen = () => {
         snap.forEach(async doc => {
           const data = doc.data();
           const deadline = selisihHari(data?.jadwal);
-          if (deadline >= 0) {
+          const parents = data?.parents;
+
+          const isRegistered = parents?.includes(user?.phone);
+
+          if (deadline >= 0 && isRegistered) {
             temp.push({...doc.data(), id: doc.id});
           }
         });
 
         if (temp?.length) {
-          await getChildList(user?.phone, async childs => {
-            let newData = [];
-            for (let i = 0; i < temp.length; i++) {
-              for (let j = 0; j < childs.length; j++) {
-                const status = await checkImunisasiStatus(
-                  temp[i].id,
-                  childs[j].id,
-                );
-                if (status) {
-                  newData.push(temp[i]);
-                }
-              }
-            }
-
-            const merged = mergeDataBySameId(newData);
-
-            setJadwal(merged);
-          });
+          setJadwal(temp);
         }
       });
     } catch (error) {
       console.log(error);
     }
   }
+
+  console.log('JADWAL : ' + JSON.stringify(jadwal));
 
   // Nav
   const navigation = useNavigation();
@@ -71,8 +60,9 @@ const RegisteredImunScreen = () => {
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <Card.ImunisasiCard
-              isRegistered={true}
+              user={user}
               data={item}
+              isRegistered={true}
               onRegsiterPress={() =>
                 navigation.navigate('TiketList', {
                   data: item,

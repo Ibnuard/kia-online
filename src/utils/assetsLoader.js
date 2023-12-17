@@ -1,7 +1,9 @@
 const path = '../../assets/images/';
 
 export const ASSETS = {
+  splashBg: require(path + 'splashBg.png'),
   logo: require(path + 'logo.png'),
+  logoLight: require(path + 'logoLight.png'),
   promo: require(path + 'promo.png'),
   navigator: {
     home: [require(path + 'home.png'), require(path + 'homeOff.png')],

@@ -16,15 +16,29 @@ const styles = StyleSheet.create({
     marginTop: Size.SIZE_14,
   },
 
+  circlePositive: {
+    backgroundColor: Colors.COLOR_ACCENT,
+  },
+
+  circleNegative: {
+    backgroundColor: Colors.COLOR_RED_20,
+  },
+
   //text style
 
   textMessage: {
     ...Typo.TextNormalRegular,
+    textAlign: 'center',
   },
 
   textButton: {
     ...Typo.TextNormalBold,
     color: Colors.COLOR_PRIMARY,
+  },
+
+  textTitle: {
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });
 

@@ -12,6 +12,8 @@ export const ModalProvider = ({children}) => {
             visible: true,
             modalType: action.modalType || 'loading',
             message: action.message || '',
+            status: action.status,
+            title: action.title,
           };
           break;
         case 'CHANGE_MODAL':
@@ -19,6 +21,8 @@ export const ModalProvider = ({children}) => {
             ...prevState,
             modalType: action.modalType,
             message: action.message || '',
+            status: action.status,
+            title: action.title,
           };
           break;
         case 'HIDE_MODAL':
@@ -33,6 +37,8 @@ export const ModalProvider = ({children}) => {
       visible: false,
       modalType: 'loading',
       message: '',
+      status: 'OK',
+      title: '',
     },
   );
 
@@ -44,6 +50,8 @@ export const ModalProvider = ({children}) => {
           visible: true,
           modalType: ms?.type || 'loading',
           message: ms?.message || '',
+          status: ms?.status,
+          title: ms?.title,
         });
       },
       changeModal: ms => {
@@ -52,18 +60,25 @@ export const ModalProvider = ({children}) => {
           visible: true,
           modalType: ms?.type,
           message: ms?.message || '',
+          status: ms?.status,
+          title: ms?.title,
         });
       },
       hideModal: ms => {
         dispatch({
           type: 'HIDE_MODAL',
           visible: false,
+          message: '',
+          title: '',
+          status: 'OK',
         });
       },
       modalState: {
         visible: state.visible,
         type: state.modalType,
         message: state.message,
+        status: state.status,
+        title: state.title,
       },
     }),
     [state],

@@ -46,7 +46,7 @@ const AdminImunisasiCard = props => {
             </View>
             <Icon name="chevron-right" size={24} />
           </View>
-          {DEADLINE >= 0 && (
+          {DEADLINE >= 0 && !props?.isHistory && (
             <View style={styles.rowButton}>
               <CustomButton
                 style={styles.posButton}
@@ -76,7 +76,7 @@ const AdminImunisasiCard = props => {
                 {data?.desc || 'Desc'}
               </Text>
             </View>
-            <Icon name="chevron-right" size={24} />
+            {!props?.hideRight && <Icon name="chevron-right" size={24} />}
           </View>
         </Card.Content>
       )}
@@ -152,12 +152,14 @@ const styles = StyleSheet.create({
   posButton: {
     flex: 1,
     marginHorizontal: 4,
+    height: Scaler.scaleSize(38),
   },
 
   negButton: {
     flex: 1,
     marginHorizontal: 4,
     backgroundColor: Colors.COLOR_RED_20,
+    height: Scaler.scaleSize(38),
   },
 
   // text

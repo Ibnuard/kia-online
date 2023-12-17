@@ -72,3 +72,39 @@ export function mergeDataBySameId(data) {
 
   return groupedById;
 }
+
+export const isPhoneValid = (phone = '') => {
+  return String(phone).startsWith('62');
+};
+
+// send notif
+export const sendNotification = async (token, title, desc) => {
+  try {
+    const send = await fetch('https://fcm.googleapis.com/fcm/send', {
+      method: 'POST',
+      headers: {
+        Authorization:
+          'key=AAAAc68a5LM:APA91bENLrUOJWT0X8KPDG7oslJkw10m4jNJLtQqV5y-Jng6rG59JqS8DJ5NJiVTU_C0UG4STsgM2zZrc7JcK7ZBx_OiG_ms81H1BoaaMoRB584GH9KkpaozuD_-qLsm_mdunPk4jen7',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        registration_ids: token,
+        notification: {
+          title: title,
+          body: desc,
+          image: '',
+        },
+        data: {},
+      }),
+    });
+
+    const sendJson = await send.json();
+
+    console.log('SUKSES');
+
+    console.log(sendJson);
+  } catch (error) {
+    //throw error;
+    console.log(error);
+  }
+};

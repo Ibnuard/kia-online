@@ -2,9 +2,22 @@ import {Animated, View, TouchableOpacity} from 'react-native';
 import CustomButton from './Button';
 import {Colors, Scaler, Size} from '../styles';
 
-export function MyTabBar({state, descriptors, navigation, position}) {
+export function MyTabBar({
+  state,
+  descriptors,
+  navigation,
+  position,
+  bgColor,
+  pv,
+}) {
   return (
-    <View style={{flexDirection: 'row', paddingHorizontal: Size.SIZE_14}}>
+    <View
+      style={{
+        flexDirection: 'row',
+        paddingHorizontal: Size.SIZE_14,
+        backgroundColor: bgColor,
+        paddingVertical: pv,
+      }}>
       {state.routes.map((route, index) => {
         const {options} = descriptors[route.key];
         const label =

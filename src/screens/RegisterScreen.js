@@ -9,6 +9,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {addToDB, isDBPathExist} from '../utils/Database';
 import ModalView from '../components/modal';
 import {ModalContext, RoleContext} from '../context';
+import {isPhoneValid} from '../utils/utils';
 
 const RegisterScreen = () => {
   const [phone, setPhone] = React.useState();
@@ -28,6 +29,18 @@ const RegisterScreen = () => {
   // FUNCTIONAL
   const onRegisterPressed = async () => {
     await showModal({type: 'loading'});
+
+    if (!isPhoneValid(phone)) {
+      await changeModal({
+        type: 'popup',
+        message:
+          'Untuk mendaftar sebagai user baru, anda harus menggunakan nomer  handphone dengan format diawali dengan “62” contoh “6285xxxxxxxx”',
+        status: 'WARN',
+        title: 'Format Salah',
+      });
+      return;
+    }
+
     const ROLE_PATH = role == 'user' ? 'Users' : 'Admins';
     const isUserExist = await isDBPathExist(`${ROLE_PATH}/${phone}`);
 
@@ -111,6 +124,8 @@ const RegisterScreen = () => {
         visible={modalState.visible}
         message={modalState.message}
         onPress={() => hideModal()}
+        status={modalState.status}
+        title={modalState.title}
       />
     </View>
   );

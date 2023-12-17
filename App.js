@@ -6,6 +6,7 @@ import {
   configureFonts,
 } from 'react-native-paper';
 import {Colors} from './src/styles';
+import messaging from '@react-native-firebase/messaging';
 
 const fontConfig = {
   fontFamily: 'Manrope-Regular',
@@ -21,6 +22,11 @@ const theme = {
   },
   fonts: configureFonts({config: fontConfig}),
 };
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 const App = () => {
   return (

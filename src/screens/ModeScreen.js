@@ -20,7 +20,7 @@ const ModeScreen = () => {
     <View style={styles.container}>
       <Image source={ASSETS.logo} style={styles.logo} />
       <Text variant={'titleLarge'} style={styles.textTitle}>
-        Selamat datang di KIA Online
+        Selamat datang di Perkembangan Anak
       </Text>
       <Text variant={'labelMedium'} style={styles.textSubtitle}>
         Daftar dan buat jadwal imunisasi untuk si buah hati
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
 
   textTitle: {
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 
   textSubtitle: {
