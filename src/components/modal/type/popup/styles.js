@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 
   circlePositive: {
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_BUTTON_50,
   },
 
   circleNegative: {

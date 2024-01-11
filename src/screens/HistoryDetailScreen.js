@@ -330,9 +330,7 @@ const styles = StyleSheet.create({
     paddingBottom: Scaler.scaleSize(120),
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,

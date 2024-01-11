@@ -17,56 +17,71 @@ const ModeScreen = () => {
   const {selectRole} = React.useContext(RoleContext);
 
   return (
-    <View style={styles.container}>
-      <Image source={ASSETS.logo} style={styles.logo} />
-      <Text variant={'titleLarge'} style={styles.textTitle}>
-        Selamat datang di Perkembangan Anak
-      </Text>
-      <Text variant={'labelMedium'} style={styles.textSubtitle}>
-        Daftar dan buat jadwal imunisasi untuk si buah hati
-      </Text>
-      <View style={styles.rowContent}>
-        <Card style={styles.cardContainer} onPress={() => setRole('user')}>
-          <Card.Content style={styles.cardContent}>
-            <Avatar.Image source={ASSETS.mode.user} />
-            <Gap height={12} />
-            <Text style={styles.textTitle}>Pengguna</Text>
-            <Gap height={4} />
-            <Text style={styles.textDesc}>Daftarkan buah hati anda disini</Text>
-            <Gap height={14} />
-            <RadioButton
-              value="user"
-              status={role === 'user' ? 'checked' : 'unchecked'}
-              onPress={() => setRole('user')}
-            />
-          </Card.Content>
-        </Card>
-        <Card style={styles.cardContainer} onPress={() => setRole('admin')}>
-          <Card.Content style={styles.cardContent}>
-            <Avatar.Image source={ASSETS.mode.admin} />
-            <Gap height={12} />
-            <Text style={styles.textTitle}>Admin</Text>
-            <Gap height={4} />
-            <Text style={styles.textDesc}>Kelola posyandu disini</Text>
-            <Gap height={14} />
-            <RadioButton
-              value="admin"
-              status={role === 'admin' ? 'checked' : 'unchecked'}
-              onPress={() => setRole('admin')}
-            />
-          </Card.Content>
-        </Card>
+    <>
+      <View style={{position: 'absolute', width: '100%', height: '100%'}}>
+        <Image
+          source={ASSETS.splashBg}
+          style={{height: '100%', width: '100%'}}
+          resizeMode={'cover'}
+        />
       </View>
-      <View style={styles.buttonContainer}>
-        <CustomButton
-          onPress={() => {
-            selectRole(role);
-            navigation.navigate('SignIn');
-          }}>
-          Lanjut
-        </CustomButton>
+      <View style={styles.container}>
+        <Image source={ASSETS.logo} style={styles.logo} />
+        <Text variant={'titleLarge'} style={styles.textTitle}>
+          Selamat datang di Perkembangan Anak
+        </Text>
+        <Text variant={'labelMedium'} style={styles.textSubtitle}>
+          Daftar dan buat jadwal imunisasi untuk si buah hati
+        </Text>
+        <View style={styles.rowContent}>
+          <Card style={styles.cardContainer} onPress={() => setRole('user')}>
+            <Card.Content style={styles.cardContent}>
+              <Avatar.Image source={ASSETS.mode.user} />
+              <Gap height={12} />
+              <Text style={{...styles.textTitle, color: Colors.COLOR_BLACK}}>
+                Pengguna
+              </Text>
+              <Gap height={4} />
+              <Text style={styles.textDesc}>
+                Daftarkan buah hati anda disini
+              </Text>
+              <Gap height={14} />
+              <RadioButton
+                value="user"
+                status={role === 'user' ? 'checked' : 'unchecked'}
+                onPress={() => setRole('user')}
+              />
+            </Card.Content>
+          </Card>
+          <Card style={styles.cardContainer} onPress={() => setRole('admin')}>
+            <Card.Content style={styles.cardContent}>
+              <Avatar.Image source={ASSETS.mode.admin} />
+              <Gap height={12} />
+              <Text style={{...styles.textTitle, color: Colors.COLOR_BLACK}}>
+                Admin
+              </Text>
+              <Gap height={4} />
+              <Text style={styles.textDesc}>Kelola posyandu disini</Text>
+              <Gap height={14} />
+              <RadioButton
+                value="admin"
+                status={role === 'admin' ? 'checked' : 'unchecked'}
+                onPress={() => setRole('admin')}
+              />
+            </Card.Content>
+          </Card>
+        </View>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            onPress={() => {
+              selectRole(role);
+              navigation.navigate('SignIn');
+            }}>
+            Lanjut
+          </CustomButton>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -114,11 +129,13 @@ const styles = StyleSheet.create({
   textTitle: {
     fontWeight: 'bold',
     textAlign: 'center',
+    color: Colors.COLOR_WHITE,
   },
 
   textSubtitle: {
     color: Colors.COLOR_GREY,
     paddingVertical: Size.SIZE_8,
+    color: Colors.COLOR_WHITE,
   },
 
   textDesc: {

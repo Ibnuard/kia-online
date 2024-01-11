@@ -170,105 +170,126 @@ const HomeScreen = () => {
   //  RENDER USER CONTENT
   function renderUserContent() {
     return (
-      <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
-        style={styles.container}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.topContent}>
-          <Text style={styles.textHi} variant={'bodyMedium'}>
-            Halo, {user?.name}
-          </Text>
-        </View>
-
-        <Text style={styles.textTitle} variant={'titleMedium'}>
-          Jadwal Imunisasi Anak
-        </Text>
-
-        {!recentImunisasi?.length ? (
-          <Card mode={'contained'} style={styles.cardNoJadwal}>
-            <Card.Content>
-              <Text style={styles.textCardNoJadwal} variant={'labelMedium'}>
-                Belum ada jadwal imunisasi
+      <View style={styles.container}>
+        <View>
+          <View style={{width: '100%', position: 'absolute'}}>
+            <Image
+              source={ASSETS.headerBg}
+              resizeMode={'cover'}
+              style={{width: '100%'}}
+            />
+          </View>
+          <View style={{padding: Size.SIZE_24}}>
+            <View style={styles.topContent}>
+              <Text style={styles.textHi} variant={'bodyMedium'}>
+                Halo, {user?.name}
               </Text>
-            </Card.Content>
-          </Card>
-        ) : (
-          <ScrollView
-            style={{flexGrow: 0}}
-            showsHorizontalScrollIndicator={false}
-            horizontal>
-            {recentImunisasi.map((item, index) => {
-              return (
-                <View
-                  key={item + index}
-                  style={{
-                    marginRight: Size.SIZE_14,
-                    width: width - Scaler.scaleSize(50),
-                  }}>
-                  <CustomCard.RecentJadwalCard
-                    data={item}
-                    onPress={() =>
-                      navigation.jumpTo('Imunisasi', {
-                        screen: 'KategoriNav',
-                        params: {
-                          screen: 'Terdaftar',
-                        },
-                      })
-                    }
-                  />
-                </View>
-              );
-            })}
-          </ScrollView>
-        )}
+            </View>
 
-        <Text style={styles.textTitle} variant={'titleMedium'}>
-          Berita Terbaru
-        </Text>
-        <Gap height={10} />
-        <View style={styles.promoContainer}>
-          <Image
-            source={ASSETS.promo}
-            style={styles.promoImg}
-            resizeMode={'contain'}
-          />
-          <View style={styles.promoButtonContainer}>
-            <CustomButton
-              style={styles.promoButton}
-              labelStyle={styles.promoButtonLabel}
-              onPress={() =>
-                navigation.navigate('HomeNews', {
-                  data: {
-                    link: 'https://www.alodokter.com/mengapa-memilih-menyusui',
-                  },
-                })
-              }>
-              Baca sekarang
-            </CustomButton>
+            <Text
+              style={{...styles.textTitle, color: Colors.COLOR_WHITE}}
+              variant={'titleMedium'}>
+              Jadwal Imunisasi Anak
+            </Text>
+
+            {!recentImunisasi?.length ? (
+              <Card mode={'contained'} style={styles.cardNoJadwal}>
+                <Card.Content>
+                  <Text style={styles.textCardNoJadwal} variant={'labelMedium'}>
+                    Belum ada jadwal imunisasi
+                  </Text>
+                </Card.Content>
+              </Card>
+            ) : (
+              <ScrollView
+                style={{flexGrow: 0}}
+                showsHorizontalScrollIndicator={false}
+                horizontal>
+                {recentImunisasi.map((item, index) => {
+                  return (
+                    <View
+                      key={item + index}
+                      style={{
+                        marginRight: Size.SIZE_14,
+                        width: width - Scaler.scaleSize(50),
+                      }}>
+                      <CustomCard.RecentJadwalCard
+                        data={item}
+                        onPress={() =>
+                          navigation.jumpTo('Imunisasi', {
+                            screen: 'KategoriNav',
+                            params: {
+                              screen: 'Terdaftar',
+                            },
+                          })
+                        }
+                      />
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            )}
           </View>
         </View>
-        <Text style={styles.textTitle} variant={'titleMedium'}>
-          Buletin Kesehatan
-        </Text>
-        <Gap height={10} />
-        <View style={styles.newsContainer}>
-          {news && news.length ? (
-            news.map((item, index) => {
-              return (
-                <CustomCard.BeritaCard
-                  onPress={() => navigation.navigate('HomeNews', {data: item})}
-                  key={item + index}
-                  data={item}
-                />
-              );
-            })
-          ) : (
-            <View style={styles.newsLoading}>
-              <ActivityIndicator />
+
+        <ScrollView
+          style={{
+            paddingHorizontal: Size.SIZE_24,
+            paddingVertical: Size.SIZE_10,
+            backgroundColor: Colors.COLOR_BACKGROUND,
+          }}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: Size.SIZE_24}}
+          showsVerticalScrollIndicator={false}>
+          <Text style={styles.textTitle} variant={'titleMedium'}>
+            Berita Terbaru
+          </Text>
+          <Gap height={10} />
+          <View style={styles.promoContainer}>
+            <Image
+              source={ASSETS.promo}
+              style={styles.promoImg}
+              resizeMode={'contain'}
+            />
+            <View style={styles.promoButtonContainer}>
+              <CustomButton
+                style={styles.promoButton}
+                labelStyle={styles.promoButtonLabel}
+                onPress={() =>
+                  navigation.navigate('HomeNews', {
+                    data: {
+                      link: 'https://www.alodokter.com/mengapa-memilih-menyusui',
+                    },
+                  })
+                }>
+                Baca sekarang
+              </CustomButton>
             </View>
-          )}
-        </View>
-      </ScrollView>
+          </View>
+          <Text style={styles.textTitle} variant={'titleMedium'}>
+            Buletin Kesehatan
+          </Text>
+          <Gap height={10} />
+          <View style={styles.newsContainer}>
+            {news && news.length ? (
+              news.map((item, index) => {
+                return (
+                  <CustomCard.BeritaCard
+                    onPress={() =>
+                      navigation.navigate('HomeNews', {data: item})
+                    }
+                    key={item + index}
+                    data={item}
+                  />
+                );
+              })
+            ) : (
+              <View style={styles.newsLoading}>
+                <ActivityIndicator />
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 
@@ -306,6 +327,13 @@ const HomeScreen = () => {
   const renderAdminContent = () => {
     return (
       <View style={styles.containerTab} showsVerticalScrollIndicator={false}>
+        <View style={{width: '100%', position: 'absolute'}}>
+          <Image
+            source={ASSETS.headerBg}
+            resizeMode={'cover'}
+            style={{width: '100%'}}
+          />
+        </View>
         <View style={styles.topContentTab}>
           <Text style={styles.textHi} variant={'bodyMedium'}>
             Halo, {user?.name}
@@ -350,7 +378,7 @@ const HomeScreen = () => {
                 data={item}
                 onPress={() =>
                   navigation.navigate('AdminAntrian', {
-                    data: {id: item.id, isHistory: true},
+                    data: {...item, id: item.id, isHistory: true},
                   })
                 }
               />
@@ -372,12 +400,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.COLOR_BACKGROUND,
-    padding: Size.SIZE_24,
   },
 
   containerTab: {
     flex: 1,
-    backgroundColor: Colors.COLOR_BACKGROUND,
+    backgroundColor: Colors.COLOR_RED,
+    paddingTop: Size.SIZE_14,
   },
 
   cardNoJadwal: {
@@ -389,7 +417,7 @@ const styles = StyleSheet.create({
   },
 
   topContent: {
-    marginBottom: Size.SIZE_20,
+    marginVertical: Size.SIZE_20,
   },
 
   topContentTab: {
@@ -426,7 +454,6 @@ const styles = StyleSheet.create({
 
   newsContainer: {
     flex: 1,
-    paddingBottom: Size.SIZE_24,
   },
 
   newsLoading: {flex: 1, justifyContent: 'center'},
@@ -434,13 +461,14 @@ const styles = StyleSheet.create({
   // ADMIN
   listModeContainer: {
     flex: 1,
-    padding: Size.SIZE_24,
+    paddingHorizontal: Size.SIZE_24,
+    paddingVertical: Size.SIZE_14,
   },
 
   // text
 
   textHi: {
-    color: Colors.COLOR_BLACK,
+    color: Colors.COLOR_WHITE,
   },
 
   textTitle: {

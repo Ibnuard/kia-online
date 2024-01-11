@@ -17,7 +17,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: Colors.COLOR_PRIMARY,
+    primary: Colors.COLOR_BUTTON,
     secondary: 'yellow',
   },
   fonts: configureFonts({config: fontConfig}),

@@ -1,10 +1,11 @@
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, Image, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Colors, Size} from '../styles';
 import AppBar from '../components/AppBar';
 import {Text} from 'react-native-paper';
 import {Card} from '../components';
 import {useNavigation} from '@react-navigation/native';
+import {ASSETS} from '../utils/assetsLoader';
 
 const CategoryScreen = () => {
   const IMUNISASI_LIST = require('../data/imunisasi.json');
@@ -44,9 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,

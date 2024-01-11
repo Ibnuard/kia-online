@@ -57,17 +57,18 @@ export function MyTabBar({
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{flex: 1, marginHorizontal: 4}}>
+            style={{flex: 1, marginHorizontal: 4, paddingBottom: Size.SIZE_14}}>
             <CustomButton
               style={{
                 height: Scaler.scaleSize(40),
                 borderColor: isFocused
-                  ? Colors.COLOR_PRIMARY
+                  ? Colors.COLOR_BUTTON
                   : Colors.COLOR_LIGHT_GRAY,
                 borderRadius: 4,
+                borderWidth: 0.5,
               }}
               labelStyle={{
-                color: isFocused ? Colors.COLOR_WHITE : Colors.COLOR_BLACK,
+                color: isFocused ? Colors.COLOR_WHITE : Colors.COLOR_WHITE,
               }}
               mode={isFocused ? 'contained' : 'outlined'}>
               {label}

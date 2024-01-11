@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import React from 'react';
-import {Scaler} from '../styles';
+import {Colors, Scaler} from '../styles';
 
 const CustomButton = props => {
   const {children, style, mode} = props;

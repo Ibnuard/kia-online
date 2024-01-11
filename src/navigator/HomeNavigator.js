@@ -7,11 +7,12 @@ import NewsScreen from '../screens/NewsScreen';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {MyTabBar} from '../components/TabBar';
 import JadwalDetailScreen from '../screens/JadwalDetailScreen';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import AppBar from '../components/AppBar';
 import {Colors} from '../styles';
 import {Gap} from '../components';
 import {useRoute} from '@react-navigation/native';
+import {ASSETS} from '../utils/assetsLoader';
 
 //create stack screen
 const Stack = createNativeStackNavigator();
@@ -48,14 +49,14 @@ export const AdminJadwaldetail = () => {
   console.log(route.params);
   return (
     <View style={{flex: 1}}>
-      <AppBar showBack={true} title="Detail Imunisasi" />
+      <AppBar showBack={true} title="Detail Imunisasi" useBg={false} />
       <Tab.Navigator
         tabBar={props => (
           <MyTabBar
             key={props}
             {...props}
-            bgColor={Colors.COLOR_WHITE}
             pv={8}
+            bgColor={Colors.COLOR_PRIMARY}
           />
         )}>
         <Tab.Screen

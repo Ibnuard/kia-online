@@ -173,10 +173,6 @@ const RegisterProfileScreen = () => {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}>
-        <StatusBar
-          backgroundColor={Colors.COLOR_WHITE}
-          barStyle={'dark-content'}
-        />
         <AppBar
           showBack={IS_EDIT}
           title={IS_EDIT ? 'Ubah Profile' : 'Lengkapi Profile'}
@@ -204,6 +200,7 @@ const RegisterProfileScreen = () => {
           </Text>
           <TextInput
             mode={'outlined'}
+            disabled={IS_EDIT}
             placeholder="Masukan emailmu disini..."
             placeholderTextColor={Colors.COLOR_GREY}
             onChange={() => {
@@ -244,6 +241,7 @@ const RegisterProfileScreen = () => {
           <TextInput
             style={styles.addressInput}
             multiline
+            disabled={IS_EDIT}
             mode={'outlined'}
             placeholder={`Masukan ${
               role == 'user' ? 'alamatmu' : 'alamat posyandu'

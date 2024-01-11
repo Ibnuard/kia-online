@@ -14,9 +14,7 @@ const ModalPopUp = ({onButtonPress, title, message, status}) => {
       ? styles.circlePositive
       : styles.circleNegative;
   const iconColor =
-    status == 'OK' || status == 'WARN'
-      ? Colors.COLOR_PRIMARY
-      : Colors.COLOR_RED;
+    status == 'OK' || status == 'WARN' ? Colors.COLOR_BUTTON : Colors.COLOR_RED;
 
   const iconName = () => {
     if (status == 'OK') {
@@ -43,7 +41,7 @@ const ModalPopUp = ({onButtonPress, title, message, status}) => {
         <CustomButton
           onPress={onButtonPress ? onButtonPress : null}
           style={{flex: 1}}>
-          Confirm
+          Konfirmasi
         </CustomButton>
       </View>
 

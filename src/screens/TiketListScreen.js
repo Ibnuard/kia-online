@@ -90,9 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,

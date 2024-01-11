@@ -1,11 +1,13 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {Colors, Size} from '../styles';
-import {Card, Gap} from '../components';
+import {Card, CustomButton, Gap} from '../components';
 import {Text} from 'react-native-paper';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import moment from 'moment';
 import {imunisasiCollection} from '../utils/Database';
+import {AuthContext} from '../context';
+import AppBar from '../components/AppBar';
 
 const JadwalDetailScreen = () => {
   const [total, setTotal] = React.useState();
@@ -13,6 +15,12 @@ const JadwalDetailScreen = () => {
   const route = useRoute();
 
   const DATA = route?.params?.data;
+
+  const {user} = React.useContext(AuthContext);
+
+  const navigation = useNavigation();
+
+  const IS_USER = user.role === 'user';
 
   React.useEffect(() => {
     getAntrianTotal();
@@ -50,28 +58,41 @@ const JadwalDetailScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <Card.AdminImunisasiCard
-        hideRight={true}
-        data={{
-          title: DATA?.name,
-          desc: `Total Antrean : ${total}`,
-        }}
-        isCategory={true}
-      />
-      <Gap height={14} />
-      {DETAILS.map((item, index) => {
-        return (
-          <View key={item + index} style={styles.infoContainer}>
-            <Text variant={'labelMedium'} style={styles.textCaption}>
-              {item.title}
-            </Text>
-            <Text style={styles.textValue} variant={'titleSmall'}>
-              {item.value || '-'}
-            </Text>
-          </View>
-        );
-      })}
+    <View style={IS_USER ? styles.containerUser : styles.container}>
+      {IS_USER && <AppBar showBack={true} title="Detail Imunisasi" />}
+      <View style={{flex: 1, padding: IS_USER ? Size.SIZE_24 : undefined}}>
+        <Card.AdminImunisasiCard
+          hideRight={true}
+          data={{
+            title: DATA?.name,
+            desc: `Total Antrean : ${total}`,
+          }}
+          isCategory={true}
+        />
+        <Gap height={14} />
+        {DETAILS.map((item, index) => {
+          return (
+            <View key={item + index} style={styles.infoContainer}>
+              <Text variant={'labelMedium'} style={styles.textCaption}>
+                {item.title}
+              </Text>
+              <Text style={styles.textValue} variant={'titleSmall'}>
+                {item.value || '-'}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+      {IS_USER && (
+        <View style={styles.bottomContainer}>
+          <CustomButton
+            onPress={() =>
+              navigation.navigate('DaftarChildList', {data: DATA})
+            }>
+            Daftar Imunisasi
+          </CustomButton>
+        </View>
+      )}
     </View>
   );
 };
@@ -82,11 +103,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.COLOR_WHITE,
-    padding: Size.SIZE_24,
+    paddingHorizontal: Size.SIZE_24,
+    paddingVertical: Size.SIZE_14,
+  },
+
+  containerUser: {
+    flex: 1,
+    backgroundColor: Colors.COLOR_WHITE,
   },
 
   infoContainer: {
     marginVertical: Size.SIZE_14,
+  },
+
+  bottomContainer: {
+    padding: Size.SIZE_24,
   },
 
   // text

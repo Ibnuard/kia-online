@@ -192,7 +192,7 @@ const ImunisasiScreen = () => {
           user={DATA_USER}
           small
           admin
-          style={{backgroundColor: Colors.COLOR_BACKGROUND}}
+          style={{margin: 4, backgroundColor: Colors.COLOR_WHITE}}
         />
         <Gap height={14} />
         <View style={styles.rowTop}>
@@ -388,9 +388,7 @@ const styles = StyleSheet.create({
     paddingBottom: Scaler.scaleSize(120),
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_WHITE,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,

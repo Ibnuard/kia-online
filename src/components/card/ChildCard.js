@@ -30,7 +30,7 @@ const ChildCard = ({
             <Icon
               size={24}
               name="emoticon-happy-outline"
-              color={Colors.COLOR_PRIMARY}
+              color={Colors.COLOR_BUTTON}
             />
           </View>
           <View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 27,
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_BUTTON_50,
     marginRight: Size.SIZE_10,
   },
 

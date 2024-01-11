@@ -45,7 +45,7 @@ const TiketScreen = () => {
             <Icon
               name={'ticket-confirmation-outline'}
               size={20}
-              color={Colors.COLOR_PRIMARY}
+              color={Colors.COLOR_GREEN}
             />
             <Text variant={'labelSmall'} style={styles.textTicket}>
               Antrean ke {ANTRIAN || DATA?.antrian}
@@ -123,9 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,
@@ -146,7 +144,7 @@ const styles = StyleSheet.create({
   circle: {
     width: Scaler.scaleSize(80),
     height: Scaler.scaleSize(80),
-    backgroundColor: Colors.COLOR_PRIMARY,
+    backgroundColor: Colors.COLOR_BUTTON,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 40,
@@ -192,7 +190,7 @@ const styles = StyleSheet.create({
 
   textTicket: {
     paddingHorizontal: 4,
-    color: Colors.COLOR_PRIMARY,
+    color: Colors.COLOR_GREEN,
   },
 
   textNomor: {

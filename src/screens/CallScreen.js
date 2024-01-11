@@ -23,7 +23,7 @@ const CallScreen = () => {
               onPress={() => Linking.openURL(`tel:${item.number}`)}>
               <Card.Content style={styles.cardContent}>
                 <View style={styles.circle}>
-                  <Icon name="call" size={20} color={Colors.COLOR_PRIMARY} />
+                  <Icon name="call" size={20} color={Colors.COLOR_BUTTON} />
                 </View>
                 <View>
                   <Text variant={'labelMedium'} style={styles.textTitle}>
@@ -50,9 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 
   mainContainer: {
     flex: 1,
@@ -72,7 +70,7 @@ const styles = StyleSheet.create({
   },
 
   circle: {
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_BUTTON_50,
     padding: Size.SIZE_12,
     borderRadius: 25,
     marginRight: Size.SIZE_8,

@@ -110,8 +110,9 @@ const App = () => {
   return (
     <NavigationContainer>
       <StatusBar
-        backgroundColor={Colors.COLOR_BACKGROUND}
-        barStyle={'dark-content'}
+        translucent
+        backgroundColor={'transparent'}
+        barStyle={'light-content'}
       />
       <ModalProvider>
         <AuthContext.Provider value={authContext}>

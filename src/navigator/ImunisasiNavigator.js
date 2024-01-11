@@ -13,16 +13,15 @@ const Tab = createMaterialTopTabNavigator();
 export const ImunisasiStack = () => {
   return (
     <View style={styles.container}>
-      <StatusBar
-        backgroundColor={Colors.COLOR_BACKGROUND}
-        barStyle={'dark-content'}
-      />
       <AppBar
         titlePosition="left"
         title={'Kategori Imunisasi'}
         style={styles.appBar}
       />
-      <Tab.Navigator tabBar={props => <MyTabBar key={props} {...props} />}>
+      <Tab.Navigator
+        tabBar={props => (
+          <MyTabBar key={props} {...props} bgColor={Colors.COLOR_PRIMARY} />
+        )}>
         <Tab.Screen
           name={'BelumTerdaftar'}
           component={NonRegisteredImunScreen}
@@ -41,7 +40,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  appBar: {
-    backgroundColor: Colors.COLOR_BACKGROUND,
-  },
+  appBar: {},
 });

@@ -62,10 +62,6 @@ const RegisterScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        backgroundColor={Colors.COLOR_BACKGROUND}
-        barStyle={'dark-content'}
-      />
       <View style={styles.topContainer}>
         <View style={styles.topContent}>
           <View style={styles.topLogo}>
@@ -136,11 +132,12 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Size.SIZE_24,
   },
 
   topContainer: {
     flex: 1,
-    backgroundColor: Colors.COLOR_BACKGROUND,
+    backgroundColor: Colors.HERO_BG,
   },
 
   inputContainer: {

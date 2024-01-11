@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {historyCollection, usersCollection} from '../utils/Database';
 import {AuthContext} from '../context';
 import {Searchbar} from 'react-native-paper';
+import {ASSETS} from '../utils/assetsLoader';
 
 // render admin content
 function renderAdminContent() {
@@ -68,44 +70,58 @@ function renderAdminContent() {
         titlePosition="left"
         title="Histori Imunisasi"
         style={styles.appBar}
+        useBg={false}
       />
-      <View style={styles.mainContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          overScrollMode={'never'}
-          style={styles.contentStyle}>
-          {KATEGORI.map((item, index) => {
-            return (
-              <CustomButton
-                mode={selectedKey == item.key ? 'contained' : 'outlined'}
-                labelStyle={{
-                  color:
-                    selectedKey == item?.key
-                      ? Colors.COLOR_WHITE
-                      : Colors.COLOR_GREY,
-                }}
-                style={
-                  selectedKey == item.key
-                    ? styles.buttonList
-                    : styles.buttonListDisable
-                }
-                key={item + index}
-                onPress={() => setSelectedKey(item.key)}>
-                {item.title}
-              </CustomButton>
-            );
-          })}
-        </ScrollView>
-        <Searchbar
-          placeholder="Cari"
-          style={styles.searchBar}
-          onChangeText={onChangeSearch}
-          value={searchQuery}
-        />
+      <View style={styles.adminMain}>
+        <View style={{backgroundColor: Colors.COLOR_PRIMARY}}>
+          <View style={{position: 'absolute', right: 0, bottom: 20}}>
+            <Image source={ASSETS.bgShadow} />
+          </View>
+          <View
+            style={{
+              paddingBottom: Size.SIZE_14,
+              paddingHorizontal: Size.SIZE_14,
+            }}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              overScrollMode={'never'}
+              style={styles.contentStyle}>
+              {KATEGORI.map((item, index) => {
+                return (
+                  <CustomButton
+                    mode={selectedKey == item.key ? 'contained' : 'outlined'}
+                    labelStyle={{
+                      color:
+                        selectedKey == item?.key
+                          ? Colors.COLOR_WHITE
+                          : Colors.COLOR_WHITE,
+                    }}
+                    style={
+                      selectedKey == item.key
+                        ? styles.buttonList
+                        : styles.buttonListDisable
+                    }
+                    key={item + index}
+                    onPress={() => setSelectedKey(item.key)}>
+                    {item.title}
+                  </CustomButton>
+                );
+              })}
+            </ScrollView>
+            <Searchbar
+              placeholder="Cari"
+              style={styles.searchBar}
+              onChangeText={onChangeSearch}
+              value={searchQuery}
+            />
+          </View>
+        </View>
+
         {filteredHistory(history)?.length ? (
           <FlatList
             data={filteredHistory(history)}
+            contentContainerStyle={{padding: Size.SIZE_14}}
             renderItem={({item, index}) => (
               <Card.AdminImunisasiCard
                 isHistory
@@ -173,15 +189,23 @@ function renderUserContent(user) {
         titlePosition="left"
         title="Histori Imunisasi"
         style={styles.appBar}
+        useBg={false}
       />
+
+      <View style={{backgroundColor: Colors.COLOR_PRIMARY}}>
+        <View style={{position: 'absolute', right: 0, bottom: 20}}>
+          <Image source={ASSETS.bgShadow} />
+        </View>
+        <View style={{padding: Size.SIZE_14}}>
+          <Searchbar
+            placeholder="Cari"
+            style={styles.searchBar}
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+          />
+        </View>
+      </View>
       <View style={styles.mainContainer}>
-        <Searchbar
-          placeholder="Cari"
-          style={styles.searchBar}
-          onChangeText={onChangeSearch}
-          value={searchQuery}
-        />
-        <Gap height={14} />
         {filteredHistory(history)?.length ? (
           <FlatList
             data={filteredHistory(history)}
@@ -236,12 +260,16 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: Size.SIZE_24,
+    paddingVertical: Size.SIZE_14,
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
 
-  appBar: {
+  adminMain: {
+    flex: 1,
     backgroundColor: Colors.COLOR_BACKGROUND,
   },
+
+  appBar: {},
 
   historyRow: {
     flexDirection: 'row',
@@ -293,6 +321,7 @@ const styles = StyleSheet.create({
     marginRight: Size.SIZE_8,
     minWidth: 75,
     height: 45,
-    borderColor: Colors.COLOR_GREY,
+    borderColor: Colors.COLOR_WHITE,
+    borderWidth: 0.5,
   },
 });

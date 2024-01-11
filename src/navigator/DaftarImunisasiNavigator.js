@@ -8,6 +8,7 @@ import {AuthContext} from '../context';
 import CategoryScreen from '../screens/CategoryScreen';
 import AddJadwalScreen from '../screens/AddJadwalscreen';
 import TiketListScreen from '../screens/TiketListScreen';
+import JadwalDetailScreen from '../screens/JadwalDetailScreen';
 
 //create stack screen
 const Stack = createNativeStackNavigator();
@@ -63,7 +64,8 @@ const DaftarFlowStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="DaftarInit" component={DaftarImunisasiScreen} />
+      <Stack.Screen name="DaftarInit" component={JadwalDetailScreen} />
+      <Stack.Screen name="DaftarChildList" component={DaftarImunisasiScreen} />
       <Stack.Screen
         name="DaftarAddChild"
         component={AddChildScreen}

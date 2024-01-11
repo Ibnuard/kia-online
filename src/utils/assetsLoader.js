@@ -5,6 +5,8 @@ export const ASSETS = {
   logo: require(path + 'logo.png'),
   logoLight: require(path + 'logoLight.png'),
   promo: require(path + 'promo.png'),
+  headerBg: require(path + 'headerBg.png'),
+  bgShadow: require(path + 'bgShadow.png'),
   navigator: {
     home: [require(path + 'home.png'), require(path + 'homeOff.png')],
     imun: [require(path + 'imun.png'), require(path + 'imunOff.png')],

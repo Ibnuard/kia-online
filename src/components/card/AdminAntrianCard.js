@@ -39,7 +39,7 @@ const AdminAntrianCard = props => {
         <Gap height={14} />
         <View style={styles.topRow}>
           <View style={styles.circle}>
-            <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
+            <Icon size={24} name="needle" color={Colors.COLOR_BUTTON} />
           </View>
           <View style={styles.leftTop}>
             <Text style={styles.textTitle} variant={'titleMedium'}>
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
 
   chipActive: {
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_GREEN_50,
     paddingVertical: 4,
   },
 
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 
   chipActiveText: {
     fontSize: Size.SIZE_12,
-    color: Colors.COLOR_PRIMARY,
+    color: Colors.COLOR_GREEN,
   },
 
   topRow: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 27,
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_BUTTON_50,
     marginRight: Size.SIZE_10,
   },
 

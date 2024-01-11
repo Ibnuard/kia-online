@@ -20,7 +20,10 @@ const ImunisasiCard = props => {
 
   return (
     <Card
-      style={{backgroundColor: Colors.COLOR_WHITE, marginVertical: 8}}
+      style={{
+        backgroundColor: Colors.COLOR_WHITE,
+        marginVertical: 8,
+      }}
       {...props}>
       {!props.small ? (
         <Card.Content>
@@ -61,7 +64,7 @@ const ImunisasiCard = props => {
 
           <View style={styles.topRow}>
             <View style={styles.circle}>
-              <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
+              <Icon size={24} name="needle" color={Colors.COLOR_BUTTON} />
             </View>
             <View>
               <Text style={styles.textTitle} variant={'titleMedium'}>
@@ -124,7 +127,7 @@ const ImunisasiCard = props => {
 
           <View style={styles.topRow}>
             <View style={styles.circle}>
-              <Icon size={24} name="needle" color={Colors.COLOR_PRIMARY} />
+              <Icon size={24} name="needle" color={Colors.COLOR_BUTTON} />
             </View>
             <View style={styles.leftTop}>
               <Text style={styles.textTitle} variant={'titleMedium'}>
@@ -154,7 +157,7 @@ export default ImunisasiCard;
 
 const styles = StyleSheet.create({
   chipDisable: {
-    backgroundColor: Colors.COLOR_LIGHT_GRAY,
+    backgroundColor: Colors.COLOR_GREEN_50,
   },
 
   chipActive: {
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
 
   chipDisableText: {
     fontSize: Size.SIZE_12,
-    color: Colors.COLOR_GREY,
+    color: Colors.COLOR_GREEN,
   },
 
   chipActiveText: {
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 27,
-    backgroundColor: Colors.COLOR_ACCENT,
+    backgroundColor: Colors.COLOR_BUTTON_50,
     marginRight: Size.SIZE_10,
   },
 
